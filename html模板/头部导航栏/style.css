@@ -1,0 +1,89 @@
+.w {
+  margin-top: 5px;
+  padding: 10px 30px;
+  background-color: pink;
+}
+.w .look {
+  width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding-left: 15px;
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 3px 4px 10px -3px #000;
+}
+.w .look .time {
+  float: left;
+  width: 700px;
+  text-align: left;
+  margin-left: 100px;
+}
+.w .look .time h3 {
+  line-height: 50px;
+  font-size: 16px;
+  vertical-align: bottom;
+}
+.w .look h1 {
+  width: 200px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 45px;
+  vertical-align: bottom;
+}
+.w .look nav {
+  width: 700px;
+  float: left;
+  text-align: center;
+  flex-wrap: nowrap;
+  margin-left: 100px;
+}
+.w .look nav ul li {
+  float: left;
+  width: 80px;
+  height: 50px;
+  margin-right: 30px;
+  line-height: 50px;
+  perspective: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.w .look nav ul li .box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 50px;
+  font-size: 16px;
+  transform-style: preserve-3d;
+  transition: all 1s;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.w .look nav ul li .box .font {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: aqua;
+  z-index: 10;
+  transform: translateZ(25px);
+  box-sizing: border-box;
+}
+.w .look nav ul li .box .bottom {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  transform: translateY(25px) rotateX(-90deg);
+  box-sizing: border-box;
+  background-color: #fffb00;
+}
+.w .look nav ul li .box:hover {
+  transform: rotateX(90deg);
+}
