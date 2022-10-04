@@ -1,24 +1,48 @@
 .w {
-  margin-top: 5px;
-  padding: 10px 30px;
-  background-color: pink;
+  padding: 10px 0;
+  background-color: #8a2be2;
+  min-width: 1600px;
+  width: 100%;
+}
+.w .logo {
+  position: absolute;
+  width: 160px;
+  float: left;
+  margin-top: 2.5px;
+  margin-left: 30px;
+  height: 50px;
+  line-height: 50px;
+  box-sizing: border-box;
+}
+.w .logo a {
+  display: inline-block;
+  width: 150px;
+  height: 45px;
+}
+.w .logo a img {
+  width: 100%;
+  height: 100%;
 }
 .w .look {
-  width: 1600px;
-  margin: 0 auto;
+  position: relative;
+  width: 1200px;
+  height: 50px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-  padding-left: 15px;
+  text-align: center;
   background-color: #fff;
   border-radius: 30px;
   box-shadow: 3px 4px 10px -3px #000;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .w .look .time {
   float: left;
-  width: 700px;
-  text-align: left;
-  margin-left: 100px;
+  width: 300px;
+  text-align: center;
 }
 .w .look .time h3 {
   line-height: 50px;
@@ -26,29 +50,36 @@
   vertical-align: bottom;
 }
 .w .look h1 {
-  width: 200px;
+  width: 400px;
   height: 50px;
   text-align: center;
   line-height: 50px;
-  font-size: 45px;
+  font-size: 28px;
   vertical-align: bottom;
 }
 .w .look nav {
-  width: 700px;
+  width: 200px;
   float: left;
   text-align: center;
   flex-wrap: nowrap;
-  margin-left: 100px;
+}
+.w .look nav ul {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
 }
 .w .look nav ul li {
   float: left;
   width: 80px;
   height: 50px;
-  margin-right: 30px;
   line-height: 50px;
   perspective: 500px;
   border-radius: 10px;
   overflow: hidden;
+  color: #fff;
 }
 .w .look nav ul li .box {
   position: relative;
@@ -58,7 +89,7 @@
   line-height: 50px;
   font-size: 16px;
   transform-style: preserve-3d;
-  transition: all 1s;
+  transition: all 0.5s;
   box-sizing: border-box;
   cursor: pointer;
 }
@@ -68,10 +99,21 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: aqua;
+  background-color: #ae5cfc;
   z-index: 10;
   transform: translateZ(25px);
   box-sizing: border-box;
+}
+.w .look nav ul li .box .font a {
+  float: left;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  text-decoration: none;
+}
+.w .look nav ul li .box .font a:hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
 }
 .w .look nav ul li .box .bottom {
   position: absolute;
@@ -82,8 +124,77 @@
   z-index: 9;
   transform: translateY(25px) rotateX(-90deg);
   box-sizing: border-box;
-  background-color: #fffb00;
+  background-color: #a94eff;
+}
+.w .look nav ul li .box .bottom a {
+  float: left;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  text-decoration: none;
+}
+.w .look nav ul li .box .bottom a:hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
 }
 .w .look nav ul li .box:hover {
   transform: rotateX(90deg);
+}
+.w .look .userInfo {
+  flex: 1;
+  width: 300px;
+  box-sizing: border-box;
+  margin-left: 10px;
+}
+.w .look .userInfo .headImg {
+  float: left;
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  overflow: hidden;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.w .look .userInfo .headImg img {
+  width: 100%;
+  height: 100%;
+}
+.w .look .userInfo .UserName {
+  float: left;
+  margin-left: 3px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.w .look .userInfo .UserName h1 {
+  width: 80px;
+  height: 50px;
+  padding: 0 3px;
+  line-height: 50px;
+  margin-left: 10px;
+  text-align: left;
+  font-size: 12px;
+  color: #a94eff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.w .look .userInfo .Login-Loginout {
+  float: left;
+  height: 50px;
+  margin-left: 5px;
+  line-height: 50px;
+  box-sizing: border-box;
+}
+.w .look .userInfo .Login-Loginout a {
+  display: inline-block;
+  text-decoration: none;
+}
+.w .look .userInfo .Login-Loginout a:hover {
+  color: #a94eff;
+}
+.w .look .userInfo .Login-Loginout a:first-child::after {
+  content: "";
+  border-right: 1px solid #ccc;
+  padding-left: 3px;
 }
