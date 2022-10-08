@@ -1,7 +1,21 @@
 <template>
   <div class="w">
-    <el-icon class="switch" :size="30" color="#303133FF" v-if="HeaderData.IconFlag" @click="HeaderFun.ChangeIconFlag"><Operation /></el-icon>
-    <el-icon class="switch" v-else :size="30" color="#303133FF" @click="HeaderFun.ChangeIconFlag"><Close /></el-icon>
+    <el-icon
+      class="switch"
+      :size="30"
+      color="#303133FF"
+      v-if="HeaderData.IconFlag"
+      @click="HeaderFun.ChangeIconFlag"
+      ><Operation
+    /></el-icon>
+    <el-icon
+      class="switch"
+      v-else
+      :size="30"
+      color="#303133FF"
+      @click="HeaderFun.ChangeIconFlag"
+      ><Close
+    /></el-icon>
     <div class="logo">
       <a href=""><img src="./images/logo.png" alt="logo" /></a>
     </div>
@@ -53,7 +67,13 @@
           <a href="">重新注册</a>
         </div>
       </div>
-      <el-icon class="FullScreen-switch" :size="30" color="#409EFF" @click="HeaderFun.FullScreen"><FullScreen /></el-icon>
+      <el-icon
+        class="FullScreen-switch"
+        :size="30"
+        color="#409EFF"
+        @click="HeaderFun.FullScreen"
+        ><FullScreen
+      /></el-icon>
     </div>
   </div>
 </template>
@@ -71,7 +91,13 @@ const HeaderData = reactive({
 const HeaderFun = reactive({
   //实时时间
   ChangeNowTime() {
-    setInterval(() => (HeaderData.NowTime = dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss")), 1000);
+    setInterval(
+      () =>
+        (HeaderData.NowTime = dayjs(new Date()).format(
+          "YYYY-MM-DD ddd HH:mm:ss",
+        )),
+      1000,
+    );
   },
   //  改变状态栏
   ChangeIconFlag() {
@@ -103,6 +129,11 @@ onMounted(() => {
     float: left;
     left: 20px;
     top: 20px;
+    cursor: pointer;
+    transition: all 0.5s;
+    &:hover {
+      transform: rotate(360deg);
+    }
   }
   //全屏开关
   .FullScreen-switch {
@@ -111,6 +142,11 @@ onMounted(() => {
     right: 30px;
     top: 10px;
     cursor: pointer;
+    transition: all 0.5s;
+    &:hover {
+      transform: scale(2);
+      opacity: 0;
+    }
   }
   // logo
   .logo {

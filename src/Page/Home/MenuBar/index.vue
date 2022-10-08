@@ -7,45 +7,54 @@
       @open="MenuBarFun.handleOpen"
       @close="MenuBarFun.handleClose"
     >
-      <el-sub-menu
+      <template
         v-for="(MenuItem, MenuIndex) in MenuBarData.MenuBarList"
         :key="MenuIndex"
-        :index="MenuIndex.toString()"
       >
-        <template #title>
+        <el-sub-menu
+          v-if="MenuItem.Menu || MenuItem.MenuList"
+          :index="MenuIndex.toString()"
+        >
+          <template #title>
+            <el-icon>
+              <component :is="MenuItem.Icon" />
+            </el-icon>
+            <span> {{ MenuItem.title }}</span>
+          </template>
+          <el-menu-item
+            v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.Menu"
+            :key="MenuChildrenIndex"
+            :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
+            >{{ MenuChildren }}
+          </el-menu-item>
+          <!--       判断是否有隐藏的-->
+          <div v-if="MenuItem.MenuList">
+            <el-sub-menu
+              v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.MenuList"
+              :key="MenuChildren.MenuId"
+              :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
+            >
+              <template #title>
+                <span>{{ MenuChildren.MenuTitle }}</span>
+              </template>
+              <el-menu-item
+                v-for="(
+                  MenuListChildren, MenuListChildrenIndex
+                ) in MenuChildren.MenuChild"
+                :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`"
+              >
+                {{ MenuListChildren }}
+              </el-menu-item>
+            </el-sub-menu>
+          </div>
+        </el-sub-menu>
+        <el-menu-item v-else :index="MenuIndex.toString()">
           <el-icon>
             <component :is="MenuItem.Icon" />
-            <!--            {{ MenuItem.Icon }}-->
           </el-icon>
-          <span>{{ MenuItem.title }}</span>
-        </template>
-        <el-menu-item
-          v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.Menu"
-          :key="MenuChildrenIndex"
-          :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
-          >{{ MenuChildren }}
+          <template #title>{{ MenuItem.title }}</template>
         </el-menu-item>
-        <!--       判断是否有隐藏的-->
-        <div v-if="MenuItem.MenuList">
-          <el-sub-menu
-            v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.MenuList"
-            :key="MenuChildren.MenuId"
-            :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
-          >
-            <template #title>
-              <span>{{ MenuChildren.MenuTitle }}</span>
-            </template>
-            <el-menu-item
-              v-for="(
-                MenuListChildren, MenuListChildrenIndex
-              ) in MenuChildren.MenuChild"
-              :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`"
-            >
-              {{ MenuListChildren }}
-            </el-menu-item>
-          </el-sub-menu>
-        </div>
-      </el-sub-menu>
+      </template>
     </el-menu>
   </div>
 </template>
