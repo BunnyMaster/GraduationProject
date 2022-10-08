@@ -1,82 +1,101 @@
 <template>
   <div class="MenuBox">
-    <!--    开关-->
-    <el-radio-group v-model="isCollapse" style="margin-bottom: 10px">
-      <el-switch v-model="switchisCollapse" class="ml-2" style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" @click="ChangeisCollapse" />
-    </el-radio-group>
-    <el-menu default-active="1" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-      <!--      下面的-->
-      <el-menu-item index="1">
-        <el-icon><IconMenu /></el-icon>
-        <template #title>生产管理</template>
-      </el-menu-item>
-      <el-sub-menu index="2">
+    <el-menu
+      default-active="1"
+      class="el-menu-vertical-demo"
+      :collapse="MenuBarData.isCollapse"
+      @open="MenuBarFun.handleOpen"
+      @close="MenuBarFun.handleClose"
+    >
+      <el-sub-menu
+        v-for="(MenuItem, MenuIndex) in MenuBarData.MenuBarList"
+        :key="MenuIndex"
+        :index="MenuIndex.toString()"
+      >
         <template #title>
-          <el-icon><Location /></el-icon>
-          <span>工艺管理</span>
+          <el-icon>
+            <component :is="MenuItem.Icon" />
+            <!--            {{ MenuItem.Icon }}-->
+          </el-icon>
+          <span>{{ MenuItem.title }}</span>
         </template>
-        <el-menu-item-group>
-          <template #title><span>档案</span></template>
-          <el-menu-item index="1-1">工序档案</el-menu-item>
-          <el-menu-item index="1-2">物料档案</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="工艺分类"> </el-menu-item-group>
-        <el-sub-menu index="1-4">
-          <template #title><span>工艺</span></template>
-          <el-menu-item index="1-3">产品工艺</el-menu-item>
-          <el-menu-item index="1-4-1">工艺处理</el-menu-item>
-          <el-menu-item index="1-4-1">工艺模型</el-menu-item>
-          <el-menu-item index="1-4-1">检验模型</el-menu-item>
-        </el-sub-menu>
+        <el-menu-item
+          v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.Menu"
+          :key="MenuChildrenIndex"
+          :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
+          >{{ MenuChildren }}
+        </el-menu-item>
+        <!--       判断是否有隐藏的-->
+        <div v-if="MenuItem.MenuList">
+          <el-sub-menu
+            v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.MenuList"
+            :key="MenuChildren.MenuId"
+            :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
+          >
+            <template #title>
+              <span>{{ MenuChildren.MenuTitle }}</span>
+            </template>
+            <el-menu-item
+              v-for="(
+                MenuListChildren, MenuListChildrenIndex
+              ) in MenuChildren.MenuChild"
+              :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`"
+            >
+              {{ MenuListChildren }}
+            </el-menu-item>
+          </el-sub-menu>
+        </div>
       </el-sub-menu>
-      <!--      <el-menu-item index="3" disabled>-->
-      <el-menu-item index="3">
-        <el-icon><document /></el-icon>
-        <template #title>生产执行</template>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
-        <template #title>设备管理</template>
-      </el-menu-item>
-      <el-menu-item index="5">
-        <el-icon><setting /></el-icon>
-        <template #title>库存管理</template>
-      </el-menu-item>
-      <el-menu-item index="6">
-        <el-icon><setting /></el-icon>
-        <template #title>统计分析</template>
-      </el-menu-item>
-      <el-menu-item index="7">
-        <el-icon><setting /></el-icon>
-        <template #title>系统设置</template>
-      </el-menu-item>
-      <el-menu-item index="7">
-        <el-icon><setting /></el-icon>
-        <template #title>系统设置</template>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { Menu as IconMenu, Setting, Location, Document } from "@element-plus/icons-vue";
-var isCollapse = ref(true);
-const switchisCollapse = ref(false);
-const ChangeisCollapse = () => {
-  isCollapse.value = !switchisCollapse.value;
-};
-const handleOpen = (key: string, keyPath: string[]) => {
-  // sCloseOrOpen.value = false;
-};
-const handleClose = (key: string, keyPath: string[]) => {
-  // sCloseOrOpen.value = true;
-};
+import { computed, nextTick, onMounted, reactive, ref } from "vue";
+import { Iphone, House, Files, Management } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const MenuBarData = reactive({
+  isCollapse: computed(() => store.state.MenuBar.isCollapse),
+  activeName: 1,
+  MenuBarList: computed(() => store.state.MenuBar.MenuBarList) || [{}],
+});
+const MenuBarFun = reactive({
+  // 菜单栏打开时
+  handleOpen(key: string, keyPath: string[]) {},
+  //菜单栏关闭时
+  handleClose(key: string, keyPath: string[]) {},
+  //  获取菜单栏数据
+  GetMenuBarList() {
+    store.dispatch("GetMenuBarList");
+  },
+});
+
+onMounted(async () => {
+  try {
+    await MenuBarFun.GetMenuBarList();
+  } catch (e) {
+    ElMessage.closeAll();
+    ElMessage({
+      showClose: true,
+      message: "Oops, this is a error message.",
+      type: "error",
+      center: true,
+    });
+  }
+});
 </script>
 
 <style lang="less">
-.Switch {
+.demo-collapse {
+  .el-icon {
+    float: left;
+  }
 }
+
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 100%;
@@ -99,6 +118,7 @@ html {
   height: 100%;
   box-sizing: border-box;
 }
+
 .MenuBox {
   float: left;
   width: 200px;

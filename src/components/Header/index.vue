@@ -1,5 +1,7 @@
 <template>
   <div class="w">
+    <el-icon class="switch" :size="30" color="#303133FF" v-if="HeaderData.IconFlag" @click="HeaderFun.ChangeIconFlag"><Operation /></el-icon>
+    <el-icon class="switch" v-else :size="30" color="#303133FF" @click="HeaderFun.ChangeIconFlag"><Close /></el-icon>
     <div class="logo">
       <a href=""><img src="./images/logo.png" alt="logo" /></a>
     </div>
@@ -51,20 +53,34 @@
           <a href="">重新注册</a>
         </div>
       </div>
+      <el-icon class="FullScreen-switch" :size="30" color="#409EFF" @click="HeaderFun.FullScreen"><FullScreen /></el-icon>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Operation, Close, FullScreen } from "@element-plus/icons-vue";
 import * as dayjs from "dayjs";
 import { nextTick, onMounted, reactive } from "vue";
-
+import { useStore } from "vuex";
+const store = useStore();
 const HeaderData = reactive({
   NowTime: dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss"),
+  IconFlag: true,
 });
 const HeaderFun = reactive({
+  //实时时间
   ChangeNowTime() {
     setInterval(() => (HeaderData.NowTime = dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss")), 1000);
+  },
+  //  改变状态栏
+  ChangeIconFlag() {
+    HeaderData.IconFlag = !HeaderData.IconFlag;
+    store.dispatch("ChangeisCollapse", HeaderData.IconFlag);
+  },
+  //  点击全屏
+  FullScreen() {
+    document.querySelector("html")!.requestFullscreen();
   },
 });
 onMounted(() => {
@@ -73,26 +89,40 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-@8a2be2: #8a2be2; //原本的颜色
-@8400ff: #ae5cfc; //触碰后的颜色
+@import "../../assets/style/mixins/Themes";
 
 .w {
   padding: 10px 0;
-  background-color: #8a2be2;
+  background-color: @primary_hover;
   min-width: 1600px;
+  overflow: hidden;
   width: 100%;
-
+  // switch 开关
+  .switch {
+    position: absolute;
+    float: left;
+    left: 20px;
+    top: 20px;
+  }
+  //全屏开关
+  .FullScreen-switch {
+    position: absolute;
+    float: left;
+    right: 30px;
+    top: 10px;
+    cursor: pointer;
+  }
   // logo
   .logo {
     position: absolute;
     width: 160px;
     float: left;
+    left: 100px;
     margin-top: 2.5px;
-    margin-left: 30px;
     height: 50px;
     line-height: 50px;
     box-sizing: border-box;
-
+    overflow: hidden;
     a {
       display: inline-block;
       width: 150px;
@@ -108,7 +138,7 @@ onMounted(() => {
   // 看板
   .look {
     position: relative;
-    width: 1200px;
+    width: 1230px;
     height: 50px;
     left: 50%;
     transform: translateX(-50%);
@@ -127,8 +157,9 @@ onMounted(() => {
       float: left;
       width: 300px;
       text-align: center;
-
+      cursor: default;
       h3 {
+        color: @back_bgc;
         line-height: 50px;
         font-size: 16px;
         vertical-align: bottom;
@@ -139,10 +170,12 @@ onMounted(() => {
     h1 {
       width: 400px;
       height: 50px;
+      color: @back_bgc;
       text-align: center;
       line-height: 50px;
       font-size: 28px;
       vertical-align: bottom;
+      cursor: default;
     }
 
     // 导航栏
@@ -189,7 +222,7 @@ onMounted(() => {
               top: 0;
               width: 100%;
               height: 100%;
-              background-color: @8400ff;
+              background-color: @primary_bgc;
               z-index: 10;
               transform: translateZ(25px);
               box-sizing: border-box;
@@ -198,10 +231,10 @@ onMounted(() => {
                 float: left;
                 width: 100%;
                 height: 100%;
-                color: #ffffff;
+                color: @primary;
                 text-decoration: none;
                 &:hover {
-                  color: #ffffff !important;
+                  color: @success!important;
                   text-decoration: none !important;
                 }
               }
@@ -216,16 +249,16 @@ onMounted(() => {
               z-index: 9;
               transform: translateY(25px) rotateX(-90deg);
               box-sizing: border-box;
-              background-color: #a94eff;
+              background-color: @active;
 
               a {
                 float: left;
                 width: 100%;
                 height: 100%;
-                color: #ffffff;
+                color: @primary;
                 text-decoration: none;
                 &:hover {
-                  color: #ffffff !important;
+                  color: @success !important;
                   text-decoration: none !important;
                 }
               }
@@ -277,7 +310,7 @@ onMounted(() => {
           margin-left: 10px;
           text-align: left;
           font-size: 12px;
-          color: #a94eff;
+          color: @primary;
           white-space: nowrap;
           text-overflow: ellipsis;
           box-sizing: border-box;
@@ -295,15 +328,18 @@ onMounted(() => {
 
         a {
           display: inline-block;
+          color: @primary;
           text-decoration: none;
-
+          & {
+            margin-left: 3px;
+          }
           &:hover {
-            color: #a94eff;
+            color: @primary_hover;
           }
 
           &:first-child::after {
             content: "";
-            border-right: 1px solid #ccc;
+            border-right: 1px solid @text;
             padding-left: 3px;
           }
         }

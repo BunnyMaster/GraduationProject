@@ -11,14 +11,13 @@ const request = axios.create({
 
 const loadingInstance = ElLoading.service({
   text: "加载中......",
-  background: "rgba(77,204,238,0.59)",
+  background: "#A0CFFF8D",
 });
 
 //请求拦截器
 request.interceptors.request.use((config: AxiosRequestConfig) => {
   loadingInstance;
   nprogress.start(); //进度条开始
-
   return config;
 });
 
