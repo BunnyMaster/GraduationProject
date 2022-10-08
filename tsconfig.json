@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "checkJs": true,
+    "target": "ES3",
+    "rootDir": "./src",
+    "outDir": "./dist",
+  },
+  "include": [
+    "src/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "src/*.js"
+  ]
+}
