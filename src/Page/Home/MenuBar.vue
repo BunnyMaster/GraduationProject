@@ -1,11 +1,13 @@
 <template>
   <div class="MenuBox">
     <el-menu
-      default-active="1"
+      default-active="0"
       class="el-menu-vertical-demo"
       :collapse="MenuBarData.isCollapse"
       @open="MenuBarFun.handleOpen"
       @close="MenuBarFun.handleClose"
+      :unique-opened="true"
+      :ellipsis="true"
     >
       <template
         v-for="(MenuItem, MenuIndex) in MenuBarData.MenuBarList"
@@ -25,7 +27,13 @@
             v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.Menu"
             :key="MenuChildrenIndex"
             :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
-            >{{ MenuChildren }}
+          >
+            <router-link
+              :to="MenuChildren.Link"
+              style="text-decoration: none; width: 100%"
+            >
+              {{ MenuChildren.Name }}
+            </router-link>
           </el-menu-item>
           <!--       判断是否有隐藏的-->
           <div v-if="MenuItem.MenuList">
@@ -43,7 +51,12 @@
                 ) in MenuChildren.MenuChild"
                 :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`"
               >
-                {{ MenuListChildren }}
+                <router-link
+                  :to="MenuListChildren.Link"
+                  style="text-decoration: none; width: 100%"
+                >
+                  {{ MenuListChildren.Name }}
+                </router-link>
               </el-menu-item>
             </el-sub-menu>
           </div>
@@ -99,6 +112,12 @@ onMounted(async () => {
 </script>
 
 <style lang="less">
+a:hover {
+  color: #409eff;
+}
+.el-menu-item:hover {
+  color: #409eff;
+}
 .demo-collapse {
   .el-icon {
     float: left;
@@ -130,7 +149,6 @@ html {
 
 .MenuBox {
   float: left;
-  width: 200px;
   height: 100%;
   box-sizing: border-box;
 }

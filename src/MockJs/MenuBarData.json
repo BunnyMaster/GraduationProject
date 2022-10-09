@@ -1,19 +1,43 @@
 [
   {
     "id": 1,
-    "title": "系统首页",
-    "Menu":null,
+    "title": "系统首参数",
+    "Menu": [
+      {
+        "Name": "系统运行",
+        "Link": "/system"
+      },
+      {
+        "Name": "系统日历",
+        "Link": "/home/main/calendar"
+      }
+    ],
     "Icon": "House"
   },
   {
     "id": 2,
     "title": "设备基础资料",
     "Menu": [
-      "安卓PAD",
-      "电子秤",
-      "条码打印机",
-      "红外对射枪",
-      "读卡器"
+      {
+        "Name": "安卓PAD",
+        "Link": "/home/main/AndroidPAD"
+      },
+      {
+        "Name": "电子秤",
+        "Link": "/home/main/ElectronicScale"
+      },
+      {
+        "Name": "条码打印机",
+        "Link": "/home/main/BarcodePrinter"
+      },
+      {
+        "Name": "红外对射枪",
+        "Link": "/home/main/InfraredCounterGun"
+      },
+      {
+        "Name": "读卡器",
+        "Link": "/home/main/CardReader"
+      }
     ],
     "Icon": "Iphone"
   },
@@ -21,14 +45,38 @@
     "id": 3,
     "title": "资源基础资料",
     "Menu": [
-      "企业",
-      "工厂",
-      "车间",
-      "产线",
-      "工站",
-      "工位",
-      "员工",
-      "工位与员工信息"
+      {
+        "Name": "企业",
+        "Link": "/home/main/Enterprise"
+      },
+      {
+        "Name": "工厂",
+        "Link": "/home/main/Plant"
+      },
+      {
+        "Name": "车间",
+        "Link": "/home/main/WorkShop"
+      },
+      {
+        "Name": "产线",
+        "Link": "/home/main/ProductionLine"
+      },
+      {
+        "Name": "工站",
+        "Link": "/home/main/Workstation"
+      },
+      {
+        "Name": "工位",
+        "Link": "/home/main/Station"
+      },
+      {
+        "Name": "员工",
+        "Link": "/home/main/staff"
+      },
+      {
+        "Name": "工位与员工信息",
+        "Link": "/home/main/StationAndEmployeeInformation"
+      }
     ],
     "Icon": "Files"
   },
@@ -36,10 +84,22 @@
     "id": 4,
     "title": "BOM基础资料",
     "Menu": [
-      "原料库存清单",
-      "产品",
-      "BOM物料",
-      "BOM物料详情"
+      {
+        "Name": "原料库存清单",
+        "Link": "/home/main/RawMaterialInventoryList"
+      },
+      {
+        "Name": "产品",
+        "Link": "/home/main/product"
+      },
+      {
+        "Name": "BOM物料",
+        "Link": "/home/main/BOMMaterial"
+      },
+      {
+        "Name": "BOM物料详情",
+        "Link": "/home/main/BOMMaterialDetails"
+      }
     ],
     "Icon": "Files"
   },
@@ -47,9 +107,18 @@
     "id": 5,
     "title": "绩效管理",
     "Menu": [
-      "绩效报表",
-      "绩效参数配置",
-      "绩效参数与工站的关系"
+      {
+        "Name": "绩效报表",
+        "Link": "/home/main/PerformanceManagement"
+      },
+      {
+        "Name": "绩效参数配置",
+        "Link": "/home/main/PerformanceParameterConfiguration"
+      },
+      {
+        "Name": "绩效参数与工站的关系",
+        "Link": "/home/main/Relationshipstation"
+      }
     ],
     "Icon": "Management"
   },
@@ -61,15 +130,24 @@
         "MenuId": 1,
         "MenuTitle": "员工工作信息",
         "MenuChild": [
-          "上岗记录"
+          {
+            "Name": "上岗记录",
+            "Link": "/home/main/MountGuardRecords"
+          }
         ]
       },
       {
         "MenuId": 2,
         "MenuTitle": "工单管理",
         "MenuChild": [
-          "订单管理",
-          "工单维护"
+          {
+            "Name": "订单管理",
+            "Link": "/home/main/OrderManagement"
+          },
+          {
+            "Name": "工单维护",
+            "Link": "/home/main/RepairOrderMaintenance"
+          }
         ]
       }
     ],
@@ -79,10 +157,22 @@
     "id": 7,
     "title": "工艺管理",
     "Menu": [
-      "工序维护",
-      "工艺流程维护",
-      "工艺流程与工序关系",
-      "工序与工站关系"
+      {
+        "Name": "工序维护",
+        "Link": "/home/main/ProcessMaintenance"
+      },
+      {
+        "Name": "工艺流程维护",
+        "Link": "/home/main/ProcessFlowMaintenance"
+      },
+      {
+        "Name": "工艺流程与工序关系",
+        "Link": "/home/main/ProcessflowAndProcessRelationship"
+      },
+      {
+        "Name": "工序与工站关系",
+        "Link": "/home/main/stationrelationship"
+      }
     ],
     "Icon": "Management"
   },
@@ -90,10 +180,22 @@
     "id": 8,
     "title": "质量管理",
     "Menu": [
-      "违规管理",
-      "残次品上报管理",
-      "异常工序检测",
-      "切片质量检测"
+      {
+        "Name": "违规管理",
+        "Link": "/home/main/BadManagement"
+      },
+      {
+        "Name": "残次品上报管理",
+        "Link": "/home/main/DefectiveProducts"
+      },
+      {
+        "Name": "异常工序检测",
+        "Link": "/home/main/AbnormalProcessDetection"
+      },
+      {
+        "Name": "切片质量检测",
+        "Link": "/home/main/SectionQualityInspection"
+      }
     ],
     "Icon": "Management"
   },
@@ -101,11 +203,26 @@
     "id": 9,
     "title": "设备管理",
     "Menu": [
-      "设备台账",
-      "设备保养计划",
-      "设备报修派工记录",
-      "设备故障上报",
-      "设备维修记录"
+      {
+        "Name": "设备台账",
+        "Link": "/home/main/EquipmentLedger"
+      },
+      {
+        "Name": "设备保养计划",
+        "Link": "/home/main/EquipmentMaintenancePlan"
+      },
+      {
+        "Name": "设备报修派工记录",
+        "Link": "/home/main/RepairAndDispatch"
+      },
+      {
+        "Name": "设备故障上报",
+        "Link": "/home/main/DeviceFaultReporting"
+      },
+      {
+        "Name": "设备维修记录",
+        "Link": "/home/main/EquipmentMaintenanceRecord"
+      }
     ],
     "Icon": "Management"
   }

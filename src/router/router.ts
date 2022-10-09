@@ -9,8 +9,19 @@ const routes: Array<RouteRecordRaw> = [
     redirect: "/home/main",
     component: () => import("@/Page/Home/index.vue"),
     children: homeChildren,
+    meta: { isShow: true },
   },
-  { path: "/system", name: "system", component: () => import("@/views/System.vue") },
-  { path: "/login", name: "login", component: () => import("@/Page/Login/index.vue") },
+  {
+    path: "/system",
+    name: "system",
+    component: () => import("@/views/System.vue"),
+    meta: { isShow: false },
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("@/Page/Login/index.vue"),
+    meta: { isShow: false },
+  },
 ];
 export default routes;

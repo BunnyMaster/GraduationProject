@@ -1,21 +1,39 @@
 <template>
   <div class="w">
-    <el-icon
-      class="switch"
-      :size="30"
-      color="#303133FF"
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      content="展开"
+      placement="bottom"
       v-if="HeaderData.IconFlag"
-      @click="HeaderFun.ChangeIconFlag"
-      ><Operation
-    /></el-icon>
-    <el-icon
-      class="switch"
+    >
+      <el-icon
+        v-show="$route.meta.isShow"
+        class="switch"
+        :size="30"
+        color="#303133FF"
+        @click="HeaderFun.ChangeIconFlag"
+      >
+        <Operation />
+      </el-icon>
+    </el-tooltip>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      content="收起"
+      placement="bottom"
       v-else
-      :size="30"
-      color="#303133FF"
-      @click="HeaderFun.ChangeIconFlag"
-      ><Close
-    /></el-icon>
+    >
+      <el-icon
+        v-show="$route.meta.isShow"
+        class="switch"
+        :size="30"
+        color="#303133FF"
+        @click="HeaderFun.ChangeIconFlag"
+      >
+        <Close />
+      </el-icon>
+    </el-tooltip>
     <div class="logo">
       <a href=""><img src="./images/logo.png" alt="logo" /></a>
     </div>
@@ -42,10 +60,10 @@
           <li>
             <div class="box">
               <div class="font">
-                <router-link to="/system">系统信息</router-link>
+                <router-link to="/login">登录注册</router-link>
               </div>
               <div class="bottom">
-                <router-link to="/system">看系统</router-link>
+                <router-link to="/login">去注册</router-link>
               </div>
             </div>
           </li>
@@ -67,13 +85,21 @@
           <a href="">重新注册</a>
         </div>
       </div>
-      <el-icon
-        class="FullScreen-switch"
-        :size="30"
-        color="#409EFF"
-        @click="HeaderFun.FullScreen"
-        ><FullScreen
-      /></el-icon>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="HeaderData.FullScreenFlag ? '全屏显示' : '退出全屏'"
+        placement="bottom"
+      >
+        <el-icon
+          class="FullScreen-switch"
+          :size="30"
+          color="#409EFF"
+          @click="HeaderFun.FullScreen"
+        >
+          <FullScreen />
+        </el-icon>
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -83,10 +109,14 @@ import { Operation, Close, FullScreen } from "@element-plus/icons-vue";
 import * as dayjs from "dayjs";
 import { nextTick, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 const store = useStore();
+const router = useRouter();
+const route = useRoute();
 const HeaderData = reactive({
   NowTime: dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss"),
   IconFlag: true,
+  FullScreenFlag: true,
 });
 const HeaderFun = reactive({
   //实时时间
@@ -106,7 +136,13 @@ const HeaderFun = reactive({
   },
   //  点击全屏
   FullScreen() {
-    document.querySelector("html")!.requestFullscreen();
+    if (HeaderData.FullScreenFlag) {
+      document.querySelector("html")!.requestFullscreen();
+      HeaderData.FullScreenFlag = !HeaderData.FullScreenFlag;
+    } else {
+      document.exitFullscreen();
+      HeaderData.FullScreenFlag = !HeaderData.FullScreenFlag;
+    }
   },
 });
 onMounted(() => {
@@ -116,6 +152,22 @@ onMounted(() => {
 
 <style scoped lang="less">
 @import "../../assets/style/mixins/Themes";
+
+.tooltip-base-box {
+  width: 600px;
+}
+.tooltip-base-box .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tooltip-base-box .center {
+  justify-content: center;
+}
+.tooltip-base-box .box-item {
+  width: 110px;
+  margin-top: 10px;
+}
 
 .w {
   padding: 10px 0;
@@ -144,8 +196,7 @@ onMounted(() => {
     cursor: pointer;
     transition: all 0.5s;
     &:hover {
-      transform: scale(2);
-      opacity: 0;
+      transform: scale(1.5);
     }
   }
   // logo

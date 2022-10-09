@@ -1,43 +1,148 @@
 <template>
   <div class="out" ref="out">
+    <el-page-header @back="goBack" style="color: #409eff; font-size: 20px">
+      <template #content>
+        <span
+          class="text-large font-600 mr-3"
+          style="color: #409eff; cursor: default"
+        >
+          先去首页预览
+        </span>
+      </template>
+    </el-page-header>
     <!-- 登录 -->
     <div class="login_box">
       <div class="top">
         <!-- 左边的 -->
-        <div class="top-left top-active">登录</div>
+        <div
+          class="top-left"
+          :class="{ 'top-active': LoginData.LoginActive }"
+          @click="LoginFun.ChangeLogin(true)"
+        >
+          登录
+        </div>
         <!-- </div>右边的 -->
-        <div class="top-right">注册</div>
+        <div
+          class="top-right"
+          :class="{ 'top-active': !LoginData.LoginActive }"
+          @click="LoginFun.ChangeLogin(false)"
+        >
+          注册
+        </div>
       </div>
       <div class="bottom">
         <!-- 登录内容 -->
-        <div class="login_content">
+        <div
+          class="login_content"
+          :class="{ LoginShowActive: !LoginData.LoginActive }"
+        >
           <!-- 登录 -->
-          <div class="UserName"><label for="LoginName">用户名</label> <input type="text" name="username" id="LoginName" placeholder="请输入邮箱/手机号/用户名" /></div>
+          <div class="UserName">
+            <label for="LoginName">用户名</label>
+            <input
+              type="text"
+              name="text"
+              v-model="LoginData.LoginUserNameInput"
+              id="LoginName"
+              placeholder="请输入用户名/邮箱/手机号"
+              @input="LoginFun.InputUserNameIsTrue()"
+            />
+            <el-icon
+              :size="16"
+              color="#fff"
+              v-show="LoginData.LoginUserNameInput"
+              @click="LoginFun.ClearInput()"
+            >
+              <CloseBold />
+            </el-icon>
+            <span v-if="LoginData.LoginNameInfo">
+              用户名必须是邮箱或者手机号位数在6~32之间
+            </span>
+          </div>
           <!-- 密码 -->
-          <div class="UserPwd"><label for="LoginPassword">密码</label> <input type="password" name="password" id="LoginPassword" placeholder="请输入8-16位密码" /></div>
-          <button type="submit" id="LoginBtn">登录</button>
+          <div class="UserPwd">
+            <label for="LoginPassword">密码</label>
+            <input
+              :type="LoginData.LoginUserPwdIsShow ? 'password' : 'text'"
+              name="password"
+              id="LoginPassword"
+              placeholder="请输入8-16位密码"
+              v-model="LoginData.LoginPwd"
+              @input="LoginFun.InputPwdIsTrue()"
+            />
+            <br />
+            <span v-if="LoginData.LoginPwdInfo">密码必须在8-16位之间</span>
+            <!--            密码显示-->
+            <el-icon
+              :size="16"
+              color="#fff"
+              v-if="LoginData.LoginUserPwdIsShow"
+              @click="LoginData.LoginUserPwdIsShow = false"
+            >
+              <Hide />
+            </el-icon>
+            <!--            密码隐藏-->
+            <el-icon
+              :size="16"
+              color="#fff"
+              v-else
+              @click="LoginData.LoginUserPwdIsShow = true"
+            >
+              <View />
+            </el-icon>
+          </div>
+          <el-button
+            id="LoginBtn"
+            type="primary"
+            :disabled="LoginData.LoginDisable"
+          >
+            登录
+          </el-button>
         </div>
         <!-- 注册内容 -->
-        <div class="register_content">
+        <div
+          class="register_content"
+          :class="{ LoginShowActive: LoginData.LoginActive }"
+        >
           <!-- 登录 -->
           <div class="UserName">
             <label for="RegiName">用户名</label>
-            <input type="text" name="username" id="RegiName" placeholder="请输入邮箱/手机号/用户名" />
+            <input
+              type="text"
+              name="username"
+              id="RegiName"
+              placeholder="请输入邮箱/手机号/用户名"
+            />
           </div>
           <!-- 密码 -->
           <div class="UserPwd">
             <label for="LoginPassword1">密码</label>
-            <input type="password" name="password1" id="LoginPassword1" placeholder="请输入8-16位密码" />
+            <input
+              type="password"
+              name="password1"
+              id="LoginPassword1"
+              placeholder="请输入8-16位密码"
+            />
           </div>
           <!-- 确认密码 -->
           <div class="UserPwd2">
             <label for="LoginPassword2">确认密码</label>
-            <input type="password" name="password2" id="LoginPassword2" placeholder="请再次输入密码" />
+            <input
+              type="password"
+              name="password2"
+              id="LoginPassword2"
+              placeholder="请再次输入密码"
+            />
           </div>
           <!-- 验证码 -->
           <div class="VerificationCode">
             <label for="Verification_Code">验证码</label>
-            <input type="text" name="password" id="Verification_Code" placeholder="请输入验证码" />
+            <input
+              type="text"
+              name="password"
+              id="Verification_Code"
+              placeholder="请输入验证码"
+            />
             <button>获取验证码</button>
           </div>
           <button type="submit" id="LoginBtn">确认</button>
@@ -48,8 +153,63 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
+import { CloseBold, Hide, View } from "@element-plus/icons-vue";
+import { useRouter } from "vue-router";
 const out: HTMLDivElement = ref(null);
+const router = useRouter();
+const goBack = () => {
+  router.push("/");
+};
+
+const LoginData = reactive({
+  LoginUserName: "",
+  LoginActive: true,
+  LoginUserNameInput: "",
+  LoginUserPwdIsShow: true,
+  LoginName: "",
+  LoginNameInfo: false,
+  LoginNameDisable: false,
+  LoginPwd: "",
+  LoginPwdInfo: false,
+  LoginPwdDisable: false,
+  LoginDisable: true,
+});
+
+const LoginFun = reactive({
+  //修改登录页面显示
+  ChangeLogin(flag: boolean) {
+    LoginData.LoginActive = flag;
+  },
+  //  清除用户名输入框内容
+  ClearInput() {
+    LoginData.LoginUserNameInput = "";
+  },
+  //  验证密码输入是否正确
+  InputPwdIsTrue() {
+    if (LoginData.LoginPwd.length >= 8 && LoginData.LoginPwd.length <= 16) {
+      LoginData.LoginPwdInfo = false;
+      LoginData.LoginPwdDisable = true;
+    } else {
+      LoginData.LoginPwdDisable = false;
+      LoginData.LoginPwdInfo = true;
+    }
+  },
+  //  判断用户名输入是否正确
+  InputUserNameIsTrue() {
+    if (
+      LoginData.LoginUserNameInput.length >= 6 &&
+      LoginData.LoginUserNameInput.length <= 32
+    ) {
+      LoginData.LoginNameDisable = true;
+      LoginData.LoginNameInfo = false;
+    } else {
+      LoginData.LoginNameDisable = false;
+      LoginData.LoginNameInfo = true;
+    }
+  },
+});
+
 onMounted(() => {
   watch(
     () => document.body.offsetHeight,
@@ -58,21 +218,59 @@ onMounted(() => {
     },
     { deep: true, immediate: true },
   );
+  //  监视两个（用户名和密码）值是否都为真
+  watch(
+    [() => LoginData.LoginNameDisable, () => LoginData.LoginPwdDisable],
+    () => {
+      if (LoginData.LoginNameDisable && LoginData.LoginPwdDisable)
+        LoginData.LoginDisable = false;
+    },
+    { deep: true },
+  );
 });
 </script>
 
 <style scoped lang="less">
-@login_top_hover_bgc: #debcff;
-@login_box_top: #b791dd3b;
-@login_box_top_font_color: #fff;
-@login_box_top_font_bgc_color: #ffffff56;
-@login_box_top_bgc_color: #ffffff7e;
-@LoginOrRegister_bgc: #ffffff3d; //登录或者注册背景颜色---半透明
-@login_content_display: none;
-@register_content_display: block;
-@8a2be2: #8a2be2; //原本的颜色
-@8400ff: #8400ff; //触碰后的颜色
+@primary: #409eff;
+@primary_hover: #a0cfffff;
+@primary_bgc: #d9ecffff;
+//错误
+@danger: #f56c6cff;
+@danger_hover: #fab6b6ff;
+@danger_bgc: #fde2e2ff;
+//选择
+@active: #ecf5ff5c;
+// 背景或文字 _bgc
+@info: #909399ff; //登录状态选项
+.LoginShowActive {
+  animation: LoginAn 1s ease-in-out forwards;
+}
+input {
+  position: relative;
+  width: 400px;
+  height: 40px;
+  outline: none;
+  color: #fff;
+  font-size: 13px;
+  text-indent: 10px;
+  text-align: left;
+  border-radius: 10px;
+  border: @primary 1px solid;
+  background-color: transparent;
+  transition: all 0.5s;
+  box-sizing: border-box;
 
+  &:focus {
+    border: 1px solid #fff;
+  }
+
+  // 为 placeholder 设置样式
+  &[type="text"]::placeholder,
+  &[type="password"]::placeholder {
+    color: #fafafa;
+    // text-align: left;
+  }
+}
 @keyframes LoginAn {
   0% {
     opacity: 1;
@@ -85,7 +283,12 @@ onMounted(() => {
     opacity: 0;
   }
 }
-
+.el-icon {
+  position: absolute;
+  top: 18px;
+  right: 125px;
+  cursor: pointer;
+}
 // 函数
 .login_register() {
   label {
@@ -97,40 +300,29 @@ onMounted(() => {
     text-align: center;
   }
 
-  input {
-    width: 400px;
-    height: 40px;
-    outline: none;
-    color: #fff;
-    font-size: 13px;
-    text-indent: 10px;
-    text-align: left;
-    border-radius: 10px;
-    border: blue 1px solid;
-    background-color: transparent;
-    transition: all 0.5s;
-    box-sizing: border-box;
-
-    &:focus {
-      border: 1px solid #fff;
-    }
-
-    // 为 placeholder 设置样式
-    &[type="text"]::placeholder,
-    &[type="password"]::placeholder {
-      color: #fafafa;
-      // text-align: left;
-    }
-  }
-
   .UserName {
+    position: relative;
     .them();
     margin-top: 50px;
+    span {
+      position: absolute;
+      top: 30px;
+      left: 195px;
+      color: @danger;
+      overflow: hidden;
+    }
   }
 
   .UserPwd {
     .them();
     margin-top: 150px;
+    span {
+      position: absolute;
+      top: 30px;
+      left: 195px;
+      color: @danger;
+      overflow: hidden;
+    }
   }
 }
 
@@ -152,8 +344,8 @@ html,
 }
 
 .top-active {
-  color: @login_top_hover_bgc;
-  background-color: @login_box_top_font_bgc_color;
+  color: @primary_hover;
+  background-color: #9093997c;
 }
 
 // 外部
@@ -161,7 +353,7 @@ html,
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 900px;
+  min-height: 930px;
   background: url(./images/bg.png) no-repeat center;
   background-size: cover;
 
@@ -182,12 +374,12 @@ html,
       width: 100%;
       height: 88px;
       float: left;
-      color: @login_box_top_font_color;
+      color: @primary;
       font-size: 22px;
       text-align: center;
       line-height: 88px;
       cursor: pointer;
-      background-color: @login_box_top;
+      background-color: #ecf5ff34;
 
       // 左边的
       .top-left {
@@ -195,11 +387,11 @@ html,
         width: 50%;
         height: 100%;
         box-sizing: border-box;
-        border-right: 2px solid #a0a0a0;
+        border-right: 2px solid @info;
 
         &:hover {
-          color: @login_top_hover_bgc;
-          background-color: @login_box_top_bgc_color;
+          color: @primary;
+          background-color: #ecf5ff5c;
         }
       }
 
@@ -209,11 +401,11 @@ html,
         width: 50%;
         height: 100%;
         box-sizing: border-box;
-        border-left: 2px solid #a0a0a0;
+        border-left: 2px solid @info;
 
         &:hover {
-          color: @login_top_hover_bgc;
-          background-color: @login_box_top_bgc_color;
+          color: @primary;
+          background-color: #ecf5ff5c;
         }
       }
     }
@@ -223,11 +415,10 @@ html,
       float: left;
       width: 100%;
       height: 462px;
-      background-color: @LoginOrRegister_bgc;
+      background-color: #d9ecff4f;
 
       // 登录内容
       .login_content {
-        display: @login_content_display;
         position: absolute;
         left: 50%;
         top: 50%;
@@ -235,8 +426,7 @@ html,
         width: 615px;
         height: 360px;
         text-align: center;
-        animation: LoginAn 1s ease-in-out forwards;
-        background-color: @LoginOrRegister_bgc;
+        background-color: #ecf5ff22;
         .login_register();
 
         // 按钮
@@ -250,17 +440,14 @@ html,
           border: none;
           border-radius: 10px;
           color: #fff;
-          background-color: blueviolet;
-          cursor: pointer;
 
           &:hover {
-            background-color: #4b2370;
+            background-color: @primary_hover;
           }
         }
       }
 
       .register_content {
-        display: @register_content_display;
         position: absolute;
         left: 50%;
         top: 50%;
@@ -268,7 +455,7 @@ html,
         width: 615px;
         height: 360px;
         text-align: center;
-        background-color: @LoginOrRegister_bgc;
+        background-color: #ecf5ff22;
         .login_register();
 
         .UserPwd {
@@ -296,12 +483,12 @@ html,
             border: none;
             border-radius: 10px;
             height: 40px;
-            background-color: @8a2be2;
+            background-color: @primary;
             color: #fff;
             cursor: pointer;
 
             &:hover {
-              background-color: @8400ff;
+              background-color: @primary_hover;
             }
           }
         }
@@ -319,12 +506,12 @@ html,
           border: none;
           border-radius: 10px;
           color: #fff;
-          background-color: @8a2be2;
+          background-color: @primary;
           font-size: 16px;
           cursor: pointer;
 
           &:hover {
-            background-color: @8400ff;
+            background-color: @primary_hover;
           }
         }
       }
