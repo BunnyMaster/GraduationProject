@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/system",
     name: "system",
     component: () => import("@/views/System.vue"),
-    meta: { isShow: false },
+    meta: { isShow: false, title: "系统运行" },
   },
   {
     path: "/login",

@@ -8,6 +8,14 @@
           <!--          图标-->
           <el-icon style="float: left; margin-top: 12.5px" :size="22"> <component :is="Data.HomeHeaderIcon" /> </el-icon>
           <span class="HomeHeaderGroup">组别:{{ Data.HomeHeaderTitle }}</span>
+          <!--          TODO 搜索部分-->
+          <div class="Search_Add" v-if="Data.Seach_ADDisShow">
+            <slot name="Search_Add" />
+            <el-input v-model="Data.input" placeholder="Please input" />
+            <el-button class="My-Search-Btn" type="success" :icon="Search">搜索</el-button>
+            <el-button class="My-Search-Btn" type="success" :icon="Plus" @click="Fun.AddItem(true)">添加</el-button>
+            <el-button class="My-Search-Btn" type="success" plain :icon="Bottom" @click="Fun.ExportXlsx()">导出</el-button>
+          </div>
           <!--            TODO -->
           <el-tooltip class="box-item" effect="dark" :content="Data.FullScreenFlag ? '全屏显示' : '退出全屏'" placement="bottom">
             <el-icon :class="Data.FullScreenFlag ? 'FullScreen-switch' : 'ExitFullScreen-switch'" :size="30" color="#409EFF" @click="Fun.FullScreen">
@@ -18,55 +26,8 @@
       </HomeHeader>
     </el-header>
     <!--  TODO stripe---带变框-->
-    <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
-      <template #empty>
-        <el-empty>
-          <template #description> 暂无数据 </template>
-          <el-button type="primary">刷新</el-button>
-        </el-empty>
-      </template>
-      <!--   TODO ---   批号-->
-      <el-table-column align="center" prop="address" label="批号" :formatter="Fun.formatter" width="auto" />
-      <!--      TODO 材料类型-->
-      <el-table-column
-        align="center"
-        prop="tag"
-        label="材料类型"
-        width="auto"
-        :filters="[
-          { text: 'Home', value: 'Home' },
-          { text: 'Office', value: 'Office' },
-        ]"
-        :filter-method="Fun.filterTag"
-        filter-placement="bottom-end"
-      >
-        <template #default="scope">
-          <el-tag :type="scope.row.tag === 'Home' ? '' : 'success'" disable-transitions>{{ scope.row.tag }}</el-tag>
-        </template>
-      </el-table-column>
-      <!--   TODO ---   材料名称-->
-      <el-table-column align="center" prop="address" label="材料名称" :formatter="Fun.formatter" width="auto" />
-      <!--   TODO ---   供应商名称-->
-      <el-table-column align="center" prop="address" label="供应商名称" :formatter="Fun.formatter" width="auto" />
-      <!--  TODO ---  采购日期  -->
-      <el-table-column align="center" sortable="custom" prop="date" label="采购日期" width="auto" style="text-align: center">
-        <template #default="scope">
-          <div style="display: flex; justify-content: center; align-items: center">
-            <el-icon><timer /></el-icon>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <!--  TODO ---  库存  -->
-      <el-table-column align="center" sortable="custom" prop="date" label="库存" width="auto" style="text-align: center">
-        <template #default="scope">
-          <div style="display: flex; justify-content: center; align-items: center">
-            <el-icon><timer /></el-icon>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+    <slot name="default"></slot>
+
     <!--    TODO 分页器-->
     <div class="demo-pagination-block" v-if="Data.tableData && Data.FullScreenFlag">
       <el-pagination
@@ -94,7 +55,6 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import Dialog_AddItem from "@/components/Dialog_AddItem.vue";
-import { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
 interface User {
   date: string;
   name: string;
@@ -104,6 +64,7 @@ interface User {
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+const props = defineProps(["tableData", "Seach_ADDisShow"]);
 const Data = reactive({
   MenuBarList: computed(() => store.state.MenuBar.MenuBarList),
   HomeHeaderIcon: "ChromeFilled",
@@ -117,29 +78,10 @@ const Data = reactive({
   input: "",
   dialogFormVisible: false,
   FullScreenFlag: true,
+  tableData: computed(() => props.tableData) || [],
+  Seach_ADDisShow: props.Seach_ADDisShow,
 });
 const Fun = reactive({
-  // TODO
-  formatter(row: User, column: TableColumnCtx<User>) {
-    return row.address;
-  },
-  // TODO 过滤列表
-  filterTag(value: string, row: User) {
-    return row.tag === value;
-  },
-  // TODO
-  tableRowClassName({ row, rowIndex }: { row: User; rowIndex: number }) {
-    if (rowIndex === 1) {
-      return "warning-row";
-    } else if (rowIndex === 3) {
-      return "success-row";
-    }
-    return "";
-  },
-  //TODO 点击编辑
-  handleEdit(index, row) {},
-  // TODO 点击删除
-  handleDelete(index, row) {},
   //  TODO 找到当前标题表示的ICON
   FindThisIcon() {
     let RouterPath: string = route.path;
@@ -156,10 +98,17 @@ const Fun = reactive({
       //  不存在Menu
       else if (Data.MenuBarList[menuBarListKey].MenuList) {
         Data.MenuBarList[menuBarListKey].MenuList.forEach((item: object, index: number) => {
-          if (item.Link === RouterPath) {
-            Data.HomeHeaderIcon = Data.MenuBarList[menuBarListKey].Icon;
-            Data.HomeHeaderTitle = Data.MenuBarList[menuBarListKey].title;
-          }
+          //找到所属子列表
+          Data.MenuBarList[menuBarListKey].MenuList.forEach((MenuListItem: any, MenuListIndex: number) => {
+            //遍历子列表
+            MenuListItem.MenuChild.forEach((MenuChildItem: any) => {
+              if (MenuChildItem.Link === RouterPath) {
+                Data.HomeHeaderIcon = Data.MenuBarList[menuBarListKey].Icon;
+                // 找到标题名
+                Data.HomeHeaderTitle = `${Data.MenuBarList[menuBarListKey].title}->${MenuChildItem.Name}`;
+              }
+            });
+          });
         });
       } else {
         ElMessage.closeAll();
@@ -252,206 +201,15 @@ const Fun = reactive({
   },
 });
 
-onMounted(async () => {
+onMounted(() => {
   nextTick(() => {
     Fun.FindThisIcon(); // 找到当前标题表示的ICON
     Fun.PageTotalList(); // 生成分页器组---列表
+    if (Data.Seach_ADDisShow === undefined) {
+      Data.Seach_ADDisShow = true;
+    }
   });
 });
-const tableData: User[] = [
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-];
 </script>
 
 <style lang="less">
@@ -519,7 +277,8 @@ const tableData: User[] = [
     box-sizing: border-box;
     overflow: hidden;
   }
-  .My-Search-Btn {
+  .My-Search-Btn,
+  el-button {
     float: left;
     width: 100px;
     height: 35px;

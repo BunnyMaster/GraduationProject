@@ -1,10 +1,17 @@
 <template>
   <div class="common-layout">
     <el-container>
+      <!--      TODO 头部-->
       <el-header><Header /></el-header>
       <el-container>
+        <!--        TODO 左侧菜单栏-->
         <el-aside width="auto"><MenuBar /></el-aside>
-        <el-main><RouterView /></el-main>
+        <el-main>
+          <!--          TODO 路由组件展示-->
+          <el-container>
+            <RouterView />
+          </el-container>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -12,9 +19,8 @@
 <script setup lang="ts">
 import MenuBar from "@/Page/Home/MenuBar.vue";
 import Header from "@/components/Header/index.vue";
-import RouterPage from "@/Page/Home/RouterPage/RouterPage.vue";
 </script>
-<style lang="less">
+<style scoped lang="less">
 @keyframes ElMainAnimation {
   0% {
     transform: scale(0.5);
@@ -34,8 +40,12 @@ import RouterPage from "@/Page/Home/RouterPage/RouterPage.vue";
   transition: all 1s;
   animation: ElMainAnimation 0.5s ease-in-out;
 }
-
-.el-table {
+.pagination {
+  background-color: #fff;
+}
+.el-table,
+.el-form,
+.ShowCountent .el-container .el-calendar {
   background-color: #d9ecff2d;
   transition: all 1s;
   animation: ElMainAnimation 0.5s ease-in-out;

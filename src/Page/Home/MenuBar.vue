@@ -1,71 +1,55 @@
 <template>
   <div class="MenuBox">
-    <el-menu
-      default-active="0"
-      class="el-menu-vertical-demo"
-      :collapse="MenuBarData.isCollapse"
-      @open="MenuBarFun.handleOpen"
-      @close="MenuBarFun.handleClose"
-      :unique-opened="true"
-      :ellipsis="true"
-    >
-      <template
-        v-for="(MenuItem, MenuIndex) in MenuBarData.MenuBarList"
-        :key="MenuIndex"
-      >
-        <el-sub-menu
-          v-if="MenuItem.Menu || MenuItem.MenuList"
-          :index="MenuIndex.toString()"
-        >
+    <el-menu :default-active="MenuBarData.activeName" class="el-menu-vertical-demo" :collapse="MenuBarData.isCollapse" @open="MenuBarFun.handleOpen" @close="MenuBarFun.handleClose" :unique-opened="true" :ellipsis="true">
+      <el-menu-item index="0">
+        <el-icon>
+          <Iphone />
+        </el-icon>
+        <template #title>
+          <router-link to="/home/main" style="text-decoration: none; width: 100%" @click="MenuBarFun.ChangeActiveName(0)"> 系统首页 </router-link>
+        </template>
+      </el-menu-item>
+
+      <template v-for="(MenuItem, MenuIndex) in MenuBarData.MenuBarList" :key="MenuItem.id">
+        <el-sub-menu v-if="MenuItem.Menu || MenuItem.MenuList" :index="MenuItem.id.toString()">
           <template #title>
             <el-icon>
               <component :is="MenuItem.Icon" />
             </el-icon>
-            <span> {{ MenuItem.title }}</span>
+            <span @click="MenuBarFun.ChangeActiveName(MenuItem.id)">
+              {{ MenuItem.title }}
+            </span>
           </template>
-          <el-menu-item
-            v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.Menu"
-            :key="MenuChildrenIndex"
-            :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
-          >
-            <router-link
-              :to="MenuChildren.Link"
-              style="text-decoration: none; width: 100%"
-            >
+          <el-menu-item v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.Menu" :key="MenuChildrenIndex" :index="`${MenuItem.id.toString()}-${MenuChildrenIndex.toString()}`">
+            <router-link :to="MenuChildren.Link" style="text-decoration: none; width: 100%" @click="MenuBarFun.ChangeActiveName(`${MenuItem.id.toString()}-${MenuChildrenIndex.toString()}`)">
               {{ MenuChildren.Name }}
             </router-link>
           </el-menu-item>
           <!--       判断是否有隐藏的-->
           <div v-if="MenuItem.MenuList">
-            <el-sub-menu
-              v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.MenuList"
-              :key="MenuChildren.MenuId"
-              :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}`"
-            >
+            <el-sub-menu v-for="(MenuChildren, MenuChildrenIndex) in MenuItem.MenuList" :key="MenuChildren.MenuId" :index="`${MenuItem.id.toString()}-${MenuChildrenIndex.toString()}`">
               <template #title>
-                <span>{{ MenuChildren.MenuTitle }}</span>
+                <span @click="MenuBarFun.ChangeActiveName(`${MenuItem.id.toString()}-${MenuChildrenIndex.toString()}`)">
+                  {{ MenuChildren.MenuTitle }}
+                </span>
               </template>
-              <el-menu-item
-                v-for="(
-                  MenuListChildren, MenuListChildrenIndex
-                ) in MenuChildren.MenuChild"
-                :index="`${MenuIndex.toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`"
-              >
-                <router-link
-                  :to="MenuListChildren.Link"
-                  style="text-decoration: none; width: 100%"
-                >
+              <el-menu-item v-for="(MenuListChildren, MenuListChildrenIndex) in MenuChildren.MenuChild" :index="`${(MenuIndex + 1).toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`">
+                <router-link :to="MenuListChildren.Link" style="text-decoration: none; width: 100%" @click="MenuBarFun.ChangeActiveName(`${(MenuIndex + 1).toString()}-${MenuChildrenIndex.toString()}-${MenuListChildrenIndex.toString()}`)">
                   {{ MenuListChildren.Name }}
                 </router-link>
               </el-menu-item>
             </el-sub-menu>
           </div>
         </el-sub-menu>
-        <el-menu-item v-else :index="MenuIndex.toString()">
+        <el-menu-item v-else :index="MenuItem.id">
           <el-icon>
             <component :is="MenuItem.Icon" />
           </el-icon>
-          <template #title>{{ MenuItem.title }}</template>
+          <template #title>
+            <span @click="MenuBarFun.ChangeActiveName(MenuItem.id)">
+              {{ MenuItem.title }}
+            </span>
+          </template>
         </el-menu-item>
       </template>
     </el-menu>
@@ -82,7 +66,7 @@ const store = useStore();
 
 const MenuBarData = reactive({
   isCollapse: computed(() => store.state.MenuBar.isCollapse),
-  activeName: 1,
+  activeName: "0",
   MenuBarList: computed(() => store.state.MenuBar.MenuBarList) || [{}],
 });
 const MenuBarFun = reactive({
@@ -94,16 +78,20 @@ const MenuBarFun = reactive({
   GetMenuBarList() {
     store.dispatch("GetMenuBarList");
   },
+  //  修改ActiveName
+  ChangeActiveName(value: [string, number]) {
+    MenuBarData.activeName = value.toString();
+  },
 });
-
+// TODO 获取菜单栏数据
 onMounted(async () => {
   try {
     await MenuBarFun.GetMenuBarList();
-  } catch (e) {
+  } catch (e: Error) {
     ElMessage.closeAll();
     ElMessage({
       showClose: true,
-      message: "Oops, this is a error message.",
+      message: `${e.message}`,
       type: "error",
       center: true,
     });
@@ -115,9 +103,18 @@ onMounted(async () => {
 a:hover {
   color: #409eff;
 }
+.is-dark {
+  a {
+    color: #ffffff;
+    &:hover {
+      color: #409eff;
+    }
+  }
+}
 .el-menu-item:hover {
   color: #409eff;
 }
+
 .demo-collapse {
   .el-icon {
     float: left;

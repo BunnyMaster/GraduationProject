@@ -5,7 +5,17 @@ const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const WebpackBar = require("webpackbar");
 module.exports = defineConfig({
   transpileDependencies: true,
+  /* publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
+  outputDir: "dist",
+  indexPath: "index.html",*/
   lintOnSave: false,
+  // devServer: {
+  //   host: "localhost",
+  //   port: 8080,
+  //   https: false,
+  //   hot: false,
+  //   proxy: null,
+  // },
   pluginOptions: {
     "style-resources-loader": {
       preProcessor: "less",

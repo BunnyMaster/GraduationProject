@@ -1,3 +1,4 @@
+// @ts-ignore
 import { reqMenuBarList } from "@/api/requestApi.js";
 const MenuBar = {
   state: {
@@ -22,10 +23,9 @@ const MenuBar = {
     //  获取菜单栏数据
     async GetMenuBarList({ commit }: any) {
       const result = await reqMenuBarList();
-      result.code === 200
-        ? commit("GETMENUBARLIST", result.data)
-        : Promise.reject(new Error("获取菜单栏数据失败"));
+      result.code === 200 ? commit("GETMENUBARLIST", result.data) : Promise.reject(new Error("获取菜单栏数据失败"));
     },
   },
 };
+
 export default MenuBar;

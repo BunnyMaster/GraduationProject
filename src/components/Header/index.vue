@@ -1,41 +1,19 @@
 <template>
   <div class="w">
-    <el-tooltip
-      class="box-item"
-      effect="dark"
-      content="展开"
-      placement="bottom"
-      v-if="HeaderData.IconFlag"
-    >
-      <el-icon
-        v-show="$route.meta.isShow"
-        class="switch"
-        :size="30"
-        color="#303133FF"
-        @click="HeaderFun.ChangeIconFlag"
-      >
+    <el-tooltip class="box-item" effect="dark" content="展开" placement="bottom" v-if="HeaderData.IconFlag">
+      <el-icon v-show="$route.meta.isShow" class="switch" :size="30" color="#303133FF" @click="HeaderFun.ChangeIconFlag">
         <Operation />
       </el-icon>
     </el-tooltip>
-    <el-tooltip
-      class="box-item"
-      effect="dark"
-      content="收起"
-      placement="bottom"
-      v-else
-    >
-      <el-icon
-        v-show="$route.meta.isShow"
-        class="switch"
-        :size="30"
-        color="#303133FF"
-        @click="HeaderFun.ChangeIconFlag"
-      >
+    <el-tooltip class="box-item" effect="dark" content="收起" placement="bottom" v-else>
+      <el-icon v-show="$route.meta.isShow" class="switch" :size="30" color="#303133FF" @click="HeaderFun.ChangeIconFlag">
         <Close />
       </el-icon>
     </el-tooltip>
     <div class="logo">
-      <a href=""><img src="./images/logo.png" alt="logo" /></a>
+      <router-link to="/">
+        <img src="./images/logo.png" alt="logo" />
+      </router-link>
     </div>
     <div class="look">
       <!-- 时间 -->
@@ -43,7 +21,7 @@
         <h3>{{ HeaderData.NowTime }}</h3>
       </div>
       <!-- 标题 -->
-      <h1>这是标题</h1>
+      <h1>{{ HeaderData.HeaderTitle }}</h1>
       <!-- 导航栏 -->
       <nav>
         <ul>
@@ -85,18 +63,8 @@
           <a href="">重新注册</a>
         </div>
       </div>
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="HeaderData.FullScreenFlag ? '全屏显示' : '退出全屏'"
-        placement="bottom"
-      >
-        <el-icon
-          class="FullScreen-switch"
-          :size="30"
-          color="#409EFF"
-          @click="HeaderFun.FullScreen"
-        >
+      <el-tooltip class="box-item" effect="dark" :content="HeaderData.FullScreenFlag ? '全屏显示' : '退出全屏'" placement="bottom">
+        <el-icon :class="HeaderData.FullScreenFlag ? 'FullScreen-switch' : 'ExitFullScreen-switch'" :size="30" color="#409EFF" @click="HeaderFun.FullScreen">
           <FullScreen />
         </el-icon>
       </el-tooltip>
@@ -107,7 +75,7 @@
 <script setup lang="ts">
 import { Operation, Close, FullScreen } from "@element-plus/icons-vue";
 import * as dayjs from "dayjs";
-import { nextTick, onMounted, reactive } from "vue";
+import { nextTick, onMounted, reactive, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 const store = useStore();
@@ -117,17 +85,12 @@ const HeaderData = reactive({
   NowTime: dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss"),
   IconFlag: true,
   FullScreenFlag: true,
+  HeaderTitle: "主题",
 });
 const HeaderFun = reactive({
   //实时时间
   ChangeNowTime() {
-    setInterval(
-      () =>
-        (HeaderData.NowTime = dayjs(new Date()).format(
-          "YYYY-MM-DD ddd HH:mm:ss",
-        )),
-      1000,
-    );
+    setInterval(() => (HeaderData.NowTime = dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss")), 1000);
   },
   //  改变状态栏
   ChangeIconFlag() {
@@ -147,6 +110,13 @@ const HeaderFun = reactive({
 });
 onMounted(() => {
   nextTick(() => HeaderFun.ChangeNowTime());
+  watch(
+    () => route.fullPath,
+    () => {
+      HeaderData.HeaderTitle = route.matched[route.matched.length - 1].meta.title;
+    },
+    { deep: true, immediate: true },
+  );
 });
 </script>
 
@@ -197,6 +167,17 @@ onMounted(() => {
     transition: all 0.5s;
     &:hover {
       transform: scale(1.5);
+    }
+  }
+  .ExitFullScreen-switch {
+    position: absolute;
+    float: left;
+    right: 30px;
+    top: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+    &:hover {
+      transform: scale(0.5);
     }
   }
   // logo

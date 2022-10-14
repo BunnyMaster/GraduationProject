@@ -1,10 +1,11 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; //这个样式必须引入
 import routes from "@/router/router";
 import { ElLoading } from "element-plus";
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL), //默认
+  // history: createWebHashHistory(process.env.BASE_URL), //修改后
   routes,
 });
 
