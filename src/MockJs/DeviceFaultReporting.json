@@ -9,27 +9,27 @@
   ],
   "DevicTtypeDilog": [
     {
-      "lable": "",
+      "lable": "005",
       "value": "电子秤"
     },
     {
-      "lable": "读卡器",
+      "lable": "004",
       "value": "读卡器"
     },
     {
-      "lable": "条码打印机",
+      "lable": "003",
       "value": "条码打印机"
     },
     {
-      "lable": "安卓PAD",
+      "lable": "001",
       "value": "安卓PAD"
     },
     {
-      "lable": "红外对射枪",
+      "lable": "002",
       "value": "红外对射枪"
     },
     {
-      "lable": "",
+      "lable": "null",
       "value":""
     }
   ],

@@ -1,6 +1,6 @@
 <template>
   <el-container class="ShowCountent">
-    <Dialog_AddItem :DialogTitle="Data.HomeHeaderTitle" :dialogFormVisible="Data.dialogFormVisible" @AddItem="Fun.AddItem" />
+    <Dialog_AddItem :tableList="tableList" :DialogTitle="Data.HomeHeaderTitle" :dialogFormVisible="Data.dialogFormVisible" @AddItem="Fun.AddItem" />
     <!--          TODO 主体页面展示-->
     <el-header class="HomeHeader">
       <HomeHeader>
@@ -11,9 +11,6 @@
           <!--          TODO 搜索部分-->
           <div class="Search_Add" v-if="Data.Seach_ADDisShow">
             <slot name="Search_Add" />
-            <el-input v-model="Data.input" placeholder="Please input" />
-            <el-button class="My-Search-Btn" type="success" :icon="Search">搜索</el-button>
-            <el-button class="My-Search-Btn" type="success" :icon="Plus" @click="Fun.AddItem(true)">添加</el-button>
             <el-button class="My-Search-Btn" type="success" plain :icon="Bottom" @click="Fun.ExportXlsx()">导出</el-button>
           </div>
           <!--            TODO -->
@@ -38,7 +35,7 @@
         :disabled="Data.disabled"
         :background="Data.background"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length"
+        :total="Data.AllPageSize"
         @size-change="Fun.handleSizeChange"
         @current-change="Fun.handleCurrentChange"
       />
@@ -51,27 +48,29 @@ import HomeHeader from "@/components/HomeHeader.vue";
 import * as XLSX from "xlsx";
 import { ElMessage, ElNotification } from "element-plus";
 import { Search, Plus, Bottom, FullScreen } from "@element-plus/icons-vue";
-import { computed, nextTick, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import Dialog_AddItem from "@/components/Dialog_AddItem.vue";
+import AndroidPAD from "@/store/APIFile/AndroidPAD";
 interface User {
   date: string;
   name: string;
   address: string;
   tag: string;
 }
-const router = useRouter();
+
 const route = useRoute();
 const store = useStore();
-const props = defineProps(["tableData", "Seach_ADDisShow"]);
+const props = defineProps(["tableData", "Seach_ADDisShow", "tableList"]);
+const emit = defineEmits(["ChangepageSize", "ChangeCurrentChange"]);
 const Data = reactive({
   MenuBarList: computed(() => store.state.MenuBar.MenuBarList),
   HomeHeaderIcon: "ChromeFilled",
   HomeHeaderTitle: "",
   PageTotalList: [100, 200, 300, 400],
-  currentPage: 4,
-  pageSize: 100,
+  currentPage: 0, // 前往多少页
+  pageSize: 10, // 每页显示多少跳
   small: false,
   background: false,
   disabled: false,
@@ -80,6 +79,7 @@ const Data = reactive({
   FullScreenFlag: true,
   tableData: computed(() => props.tableData) || [],
   Seach_ADDisShow: props.Seach_ADDisShow,
+  AllPageSize: computed(() => store.state.AndroidPAD.CountPage),
 });
 const Fun = reactive({
   //  TODO 找到当前标题表示的ICON
@@ -125,16 +125,18 @@ const Fun = reactive({
   // TODO 分页器数组
   PageTotalList() {
     let TotalList: number[] = [];
-    for (let i = 50; i <= 1000; i += 50) TotalList.push(i);
+    for (let i = 10; i <= 100; i += 10) TotalList.push(i);
     Data.PageTotalList = TotalList;
   },
   // TODO 分页器数据修改
   handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+    Data.pageSize = val;
+    emit("ChangeCurrentChange", Data.pageSize);
   },
   //  TODO 当分页器-page-点击时
   handleCurrentChange(val: number) {
-    console.log(`current page: ${val}`);
+    Data.currentPage = val;
+    emit("ChangepageSize", Data.currentPage);
   },
   // TODO 导出数据表
   ExportXlsx() {
@@ -143,7 +145,7 @@ const Fun = reactive({
     if (route.meta.title) {
       XLSX.writeFile(web, `${route.meta.title}.xls`);
       ElNotification({
-        title: "Success",
+        title: "成功,正在下载",
         message: `${route.meta.title}数据表正在下载......`,
         type: "success",
         showClose: true,
@@ -157,27 +159,6 @@ const Fun = reactive({
         type: "success",
         showClose: true,
         position: "top-left",
-      });
-    }
-  },
-  //  TODO 添加数据
-  AddItem(flag: boolean) {
-    Data.dialogFormVisible = !Data.dialogFormVisible;
-    if (Data.dialogFormVisible) {
-      ElMessage.closeAll();
-      ElMessage({
-        showClose: true,
-        message: "请求修改所需内容",
-        type: "success",
-        center: true,
-      });
-    } else if (!Data.dialogFormVisible) {
-      ElMessage.closeAll();
-      ElMessage({
-        showClose: true,
-        message: "提交中......",
-        type: "success",
-        center: true,
       });
     }
   },

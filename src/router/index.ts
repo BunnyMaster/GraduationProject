@@ -11,10 +11,11 @@ const router = createRouter({
 
 const loadingInstance = ElLoading.service({
   text: "加载中......",
-  background: "#A0CFFF8D",
+  background: "#A0CFFF27",
 });
 // 1.加载进度条：
 router.beforeEach((to, from, next) => {
+  // console.log(to);// 去往
   NProgress.start();
   loadingInstance;
   next();

@@ -5,17 +5,20 @@ const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const WebpackBar = require("webpackbar");
 module.exports = defineConfig({
   transpileDependencies: true,
+  // TODO 打包时使用
   /* publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
   outputDir: "dist",
   indexPath: "index.html",*/
   lintOnSave: false,
-  // devServer: {
-  //   host: "localhost",
-  //   port: 8080,
-  //   https: false,
-  //   hot: false,
-  //   proxy: null,
-  // },
+  devServer: {
+    proxy: {
+      // TODO 访问api链接时
+      "/api": {
+        target: "http://localhost:6666", //这里填入你要请求的接口的前缀
+      },
+      //}
+    },
+  },
   pluginOptions: {
     "style-resources-loader": {
       preProcessor: "less",

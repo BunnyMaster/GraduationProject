@@ -35,4 +35,23 @@ onMounted(async () => {
   }
 });
 </script>
-<style lang="less"></style>
+<style lang="less">
+body {
+  margin: 0;
+}
+.example-showcase .el-loading-mask {
+  z-index: 9;
+}
+.el-button--text {
+  margin-right: 15px;
+}
+.el-select {
+  width: 300px;
+}
+.el-input {
+  width: 300px;
+}
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
+</style>

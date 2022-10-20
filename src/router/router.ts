@@ -24,4 +24,5 @@ const routes: Array<RouteRecordRaw> = [
     meta: { isShow: false },
   },
 ];
+
 export default routes;

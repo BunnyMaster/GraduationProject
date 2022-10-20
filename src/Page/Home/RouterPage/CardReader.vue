@@ -1,5 +1,5 @@
 <template>
-  <HomeTableCommon :tableData="tableData">
+  <HomeTableCommon :tableList="tableList" :tableData="tableData">
     <template #default>
       <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
         <template #empty>
@@ -9,7 +9,13 @@
           </el-empty>
         </template>
         <!--      TODO 设备条码-->
-        <el-table-column align="center" :fixed="'left'" prop="date" label="设备条码" width="150" style="text-align: center" />
+        <el-table-column align="center" :fixed="'left'" prop="date" label="设备条码" width="180" style="text-align: center; padding: 3px">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <JsBarcode v-bind="(loading = false)" :jsbarcodeInfo="scope.row.date" :text="$route.meta.title" />
+            </div>
+          </template>
+        </el-table-column>
         <!--   TODO ---   设备类型-->
         <el-table-column
           align="center"
@@ -165,7 +171,8 @@
 </template>
 <script setup lang="ts">
 import HomeTableCommon from "@/components/HomeTableCommon.vue";
-import { reactive } from "vue";
+import JsBarcode from "@/components/JsBarcode.vue";
+import { reactive, ref } from "vue";
 import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
 interface User {
   date: string;
@@ -173,6 +180,25 @@ interface User {
   address: string;
   tag: string;
 }
+const tableList = [
+  "设备条码",
+  "设备类型",
+  "设备规格",
+  "所属工站",
+  "所属工位",
+  "供应商",
+  "生产商",
+  "读卡速度",
+  "打卡间隔",
+  "感应距离",
+  "读卡频率",
+  "采购时间",
+  "出厂编号",
+  "用途",
+  "所有权部门",
+  "资产负责人",
+];
+const loading = ref(true);
 const Fun = reactive({
   // TODO
   formatter(row: User, column: TableColumnCtx<User>) {

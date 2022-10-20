@@ -11,20 +11,21 @@
     :title="`${Dialog_AddItemData.DialogTitle}-${$route.meta.title}`"
   >
     <el-form :model="Dialog_AddItemData">
-      <el-form-item label="Promotion name" :label-width="Dialog_AddItemData.formLabelWidth">
-        <el-input v-model="Dialog_AddItemData.name" autocomplete="off" />
-      </el-form-item>
+      <h1 style="text-align: center; margin-bottom: 16px">请添请加</h1>
       <!--          TODO 选择框中的设备列表-->
-      <el-form-item label="Zones" :label-width="Dialog_AddItemData.formLabelWidth">
+      <el-form-item label="设备列表" :label-width="Dialog_AddItemData.formLabelWidth">
         <el-select v-model="Dialog_AddItemData.region" placeholder="请选择设备">
           <el-option v-for="(LabelItem, LableIndex) in Dialog_AddItemData.DeviceFaultReportingList.DevicTtype" :key="LableIndex" :label="LabelItem" :value="LabelItem" />
         </el-select>
+      </el-form-item>
+      <el-form-item v-for="(tableItem, tableIndex) in tableList" :key="tableIndex" :label="tableItem" :label-width="Dialog_AddItemData.formLabelWidth">
+        <el-input v-model="Dialog_AddItemData.name" autocomplete="off" />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="Dialog_AddItemFun.isShowDialog(false)">返回</el-button>
-        <el-button type="primary" @click="Dialog_AddItemFun.isShowDialog(false)">确认</el-button>
+        <el-button type="primary" @click="Dialog_AddItemFun.isShowDialog(true)">确认</el-button>
       </span>
     </template>
   </el-dialog>
@@ -34,19 +35,13 @@
 import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from "vue";
 
 import { useStore } from "vuex";
-const props = defineProps(["DialogTitle", "dialogFormVisible"]);
+const props = defineProps(["DialogTitle", "dialogFormVisible", "tableList"]);
 const emit = defineEmits(["AddItem"]);
 const store = useStore();
-const dialogFormVisible = false;
 const Dialog_AddItemData = reactive({
   name: "",
   region: "",
-  date1: "",
-  date2: "",
   delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
   dialogFormVisible: false, // 是否显示弹出框
   formLabelWidth: "140px",
   DeviceFaultReportingList: computed(() => store.state.EquipmentManagement.DeviceFaultReportingList),
@@ -62,6 +57,7 @@ const Dialog_AddItemFun = reactive({
   isShowDialog(flag: boolean) {
     emit("AddItem", flag);
     Dialog_AddItemData.dialogFormVisible = props.dialogFormVisible;
+    console.log(Dialog_AddItemData.name);
   },
 });
 watch(
@@ -75,17 +71,4 @@ onMounted(() => {
   Dialog_AddItemFun.GetDeviceFaultReportingList();
 });
 </script>
-<style scoped lang="less">
-.el-button--text {
-  margin-right: 15px;
-}
-.el-select {
-  width: 300px;
-}
-.el-input {
-  width: 300px;
-}
-.dialog-footer button:first-child {
-  margin-right: 10px;
-}
-</style>
+<style scoped lang="less"></style>

@@ -81,16 +81,21 @@ import { useRouter, useRoute } from "vue-router";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
+const DateList: string[] = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+var dayNumber: number = dayjs(new Date()).format("YYYY-MM-DD d HH:mm:ss").split(" ")[1];
+var NowTimeDay: number = dayjs(new Date()).format("YYYY-MM-DD d HH:mm:ss").split(" ")[1].replace(dayNumber, DateList[dayNumber]);
 const HeaderData = reactive({
-  NowTime: dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss"),
+  NowTime: dayjs(new Date()).format(`YYYY年MM月DD号 ${NowTimeDay} HH:mm:ss`),
   IconFlag: true,
   FullScreenFlag: true,
   HeaderTitle: "主题",
 });
 const HeaderFun = reactive({
-  //实时时间
+  //实时时间 --- 改变日期
   ChangeNowTime() {
-    setInterval(() => (HeaderData.NowTime = dayjs(new Date()).format("YYYY-MM-DD ddd HH:mm:ss")), 1000);
+    setInterval(() => {
+      HeaderData.NowTime = dayjs(new Date()).format(`YYYY年MM月DD号 ${NowTimeDay} HH:mm:ss`);
+    }, 1000);
   },
   //  改变状态栏
   ChangeIconFlag() {
