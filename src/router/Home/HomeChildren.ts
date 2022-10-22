@@ -40,12 +40,6 @@ const homeChildren = [
     component: () => import("@/Page/Home/RouterPage/InfraredCounterGun.vue"),
     meta: { title: "红外对射枪" },
   },
-  //读卡器
-  {
-    path: "/home/main/CardReader",
-    component: () => import("@/Page/Home/RouterPage/CardReader.vue"),
-    meta: { title: "读卡器" },
-  },
   //企业
   {
     path: "/home/main/Enterprise",
@@ -232,12 +226,6 @@ const homeChildren = [
     path: "/home/main/EquipmentLedger",
     component: () => import("@/Page/Home/RouterPage/EquipmentLedger.vue"),
     meta: { title: "设备台账" },
-  },
-  //设备保养计划
-  {
-    path: "/home/main/EquipmentMaintenancePlan",
-    component: () => import("@/Page/Home/RouterPage/EquipmentMaintenancePlan.vue"),
-    meta: { title: "设备保养计划" },
   },
   //设备报修派工记录
   {

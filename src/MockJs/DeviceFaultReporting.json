@@ -1,7 +1,6 @@
 {
   "DevicTtype": [
     "电子秤",
-    "读卡器",
     "条码打印机",
     "安卓PAD",
     "红外对射枪",
@@ -9,12 +8,8 @@
   ],
   "DevicTtypeDilog": [
     {
-      "lable": "005",
-      "value": "电子秤"
-    },
-    {
       "lable": "004",
-      "value": "读卡器"
+      "value": "电子秤"
     },
     {
       "lable": "003",

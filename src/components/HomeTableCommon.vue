@@ -10,6 +10,8 @@
           <span class="HomeHeaderGroup">组别:{{ Data.HomeHeaderTitle }}</span>
           <!--          TODO 搜索部分-->
           <div class="Search_Add" v-if="Data.Seach_ADDisShow">
+            <el-input v-model="Data.input" placeholder="搜索生产商" @keyup.enter="Fun.GoSearch()" />
+            <el-button class="My-Search-Btn" type="success" :icon="Search" @click="Fun.GoSearch()">搜索</el-button>
             <slot name="Search_Add" />
             <el-button class="My-Search-Btn" type="success" plain :icon="Bottom" @click="Fun.ExportXlsx()">导出</el-button>
           </div>
@@ -52,7 +54,8 @@ import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import Dialog_AddItem from "@/components/Dialog_AddItem.vue";
-import AndroidPAD from "@/store/APIFile/AndroidPAD";
+import AndroidPAD from "@/store/APIFile/2AndroidPAD";
+import { log } from "echarts/types/src/util/log";
 interface User {
   date: string;
   name: string;
@@ -62,14 +65,14 @@ interface User {
 
 const route = useRoute();
 const store = useStore();
-const props = defineProps(["tableData", "Seach_ADDisShow", "tableList"]);
-const emit = defineEmits(["ChangepageSize", "ChangeCurrentChange"]);
+const props = defineProps(["tableData", "Seach_ADDisShow", "tableList", "AllPageSize"]);
+const emit = defineEmits(["ChangepageSize", "ChangeCurrentChange", "ChangeTableData"]);
 const Data = reactive({
   MenuBarList: computed(() => store.state.MenuBar.MenuBarList),
   HomeHeaderIcon: "ChromeFilled",
   HomeHeaderTitle: "",
   PageTotalList: [100, 200, 300, 400],
-  currentPage: 0, // 前往多少页
+  currentPage: 1, // 前往多少页
   pageSize: 10, // 每页显示多少跳
   small: false,
   background: false,
@@ -79,7 +82,7 @@ const Data = reactive({
   FullScreenFlag: true,
   tableData: computed(() => props.tableData) || [],
   Seach_ADDisShow: props.Seach_ADDisShow,
-  AllPageSize: computed(() => store.state.AndroidPAD.CountPage),
+  AllPageSize: computed(() => props.AllPageSize),
 });
 const Fun = reactive({
   //  TODO 找到当前标题表示的ICON
@@ -179,6 +182,10 @@ const Fun = reactive({
         Data.FullScreenFlag = !Data.FullScreenFlag;
       }
     }
+  },
+  //  TODO 点击搜索
+  GoSearch() {
+    emit("ChangeTableData", Data.input);
   },
 });
 

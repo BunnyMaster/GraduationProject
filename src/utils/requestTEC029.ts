@@ -3,7 +3,7 @@ import nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import { ElLoading } from "element-plus";
 const request = axios.create({
-  baseURL: "/api", //请求的基础路径
+  baseURL: "/prod-api", //请求的基础路径
   timeout: 5000, //超时时间
 });
 

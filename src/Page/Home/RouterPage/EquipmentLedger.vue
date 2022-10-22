@@ -1,5 +1,12 @@
 <template>
-  <HomeTableCommon :tableData="tableData">
+  <HomeTableCommon
+    :tableData="tableData"
+    :tableList="tableList"
+    :AllPageSize="Data.AllPageSize"
+    @ChangepageSize="Fun.ChangepageSize"
+    @ChangeCurrentChange="Fun.ChangeCurrentChange"
+    @ChangeTableData="Fun.ChangeTableData"
+  >
     <template #default>
       <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
         <template #empty>
@@ -9,82 +16,67 @@
           </el-empty>
         </template>
         <!--   TODO --- 序号  -->
-        <el-table-column align="center" :fixed="'left'" sortable prop="date" label="序号" width="150" style="text-align: center">
+        <el-table-column align="center" :fixed="'left'" prop="id" label="序号" width="116">
           <template #default="scope">
-            <div style="display: flex; justify-content: center; align-items: center">
-              <el-icon><timer /></el-icon>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
-            </div>
+            <span style="margin-left: 10px">{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
         <!--   TODO --- 编号  -->
-        <el-table-column align="center" sortable prop="date" label="编号" width="150" style="text-align: center">
+        <el-table-column align="center" sortable prop="EquipmentLedgerNum" label="编号" width="266">
           <template #default="scope">
             <div style="display: flex; justify-content: center; align-items: center">
-              <el-icon><timer /></el-icon>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
+              <el-icon><Discount /></el-icon>
+              <span style="margin-left: 10px">{{ scope.row.EquipmentLedgerNum }}</span>
             </div>
           </template>
         </el-table-column>
         <!--      TODO 设备类型-->
-        <el-table-column
-          align="center"
-          prop="tag"
-          label="设备类型"
-          width="120"
-          :filters="[
-            { text: 'Home', value: 'Home6' },
-            { text: 'Office', value: 'Office' },
-          ]"
-          :filter-method="Fun.filterTag"
-          filter-placement="bottom-end"
-        >
-          <template #default="scope">
-            <el-tag :type="scope.row.tag === 'Home' ? '' : 'success'" disable-transitions>{{ scope.row.tag }}</el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column align="center" prop="EquipmentType" label="设备类型" width="166" />
         <!--      TODO 设备规格-->
-        <el-table-column align="center" prop="date" label="设备规格" width="260" style="text-align: center" />
+        <el-table-column align="center" prop="EquipmentEPEC" label="设备规格" width="260" />
         <!--      TODO 供应商-->
-        <el-table-column align="center" prop="date" label="供应商" width="400" style="text-align: center" />
+        <el-table-column align="center" prop="Provider" label="供应商" width="400" />
         <!--      TODO 出厂编号-->
-        <el-table-column align="center" prop="date" label="上报人" width="出厂编号" style="text-align: center" />
+        <el-table-column align="center" prop="SubPerson" label="上报人" width="166" />
         <!--      TODO 用途-->
-        <el-table-column align="center" prop="date" label="用途" width="出厂编号" style="text-align: center" />
+        <el-table-column align="center" prop="ToUse" label="用途" width="出厂编号" />
         <!--   TODO --- 采购日期  -->
-        <el-table-column align="center" sortable prop="date" label="采购日期" width="260" style="text-align: center">
+        <el-table-column align="center" sortable prop="ImportanTime" label="采购日期" width="266">
           <template #default="scope">
             <div style="display: flex; justify-content: center; align-items: center">
               <el-icon><timer /></el-icon>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
+              <span style="margin-left: 10px">{{ scope.row.ImportanTime }}</span>
             </div>
           </template>
         </el-table-column>
         <!--      TODO 资产负责人-->
-        <el-table-column align="center" prop="date" label="资产负责人" width="150" style="text-align: center" />
+        <el-table-column align="center" prop="principal" label="资产负责人" width="150" />
       </el-table>
     </template>
   </HomeTableCommon>
 </template>
 <script setup lang="ts">
 import HomeTableCommon from "@/components/HomeTableCommon.vue";
-import { reactive } from "vue";
-import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
+import { computed, onMounted, reactive } from "vue";
+import { Discount, Timer } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
+import { ElMessage } from "element-plus";
+import { fromPairs } from "lodash";
 interface User {
   date: string;
   name: string;
   address: string;
   tag: string;
 }
+const store = useStore();
+const tableList = ["设备条码", "设备类型", "设备规格", "所属工站", "所属工位", "感应距离", "感应方式", "采购时间", "出厂编号", "用途", "所有权部门", "资产负责人"];
+var tableData = computed(() => store.state.RepairCord.equipmentledgerLIst);
+const Data = reactive({
+  currentPage: 1, // 前往多少页
+  pageSize: 10, // 每页显示多少跳
+  AllPageSize: computed(() => store.state.RepairCord.equipmentledgerCountPage),
+});
 const Fun = reactive({
-  // TODO
-  formatter(row: User, column: TableColumnCtx<User>) {
-    return row.address;
-  },
-  // TODO 过滤列表
-  filterTag(value: string, row: User) {
-    return row.tag === value;
-  },
   // TODO
   tableRowClassName({ row, rowIndex }: { row: User; rowIndex: number }) {
     if (rowIndex === 1) {
@@ -94,204 +86,43 @@ const Fun = reactive({
     }
     return "";
   },
-  //TODO 点击编辑
-  handleEdit(index, row) {},
-  // TODO 点击删除
-  handleDelete(index, row) {},
+  async GETequipmentledger() {
+    ElMessage.closeAll();
+    try {
+      await store.dispatch("GETequipmentledger", { index: Data.currentPage, pageSize: Data.pageSize });
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: `${e.messsage}`,
+        type: "error",
+        center: true,
+      });
+    }
+  },
+  //  TODO ChangeCurrentPage && pageSize
+  ChangepageSize(Val: any) {
+    Data.currentPage = Data.pageSize * (Val - 1);
+    Fun.GETequipmentledger();
+  },
+  ChangeCurrentChange(Val: any) {
+    Data.pageSize = Val;
+    Fun.GETequipmentledger();
+  },
+  // TODO 改变数组ChangeTableData
+  ChangeTableData(Val: string) {
+    let list: string[] = [];
+    if (Val) {
+      tableData.value.forEach((Name: any) => {
+        if (Name.manufacturer.toString() === Val.toString()) list.push(Name);
+      });
+      tableData = computed(() => list);
+    } else {
+      tableData = computed(() => store.state.RepairCord.equipmentledgerLIst);
+    }
+  },
 });
 
-const tableData: User[] = [
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-];
+onMounted(() => {
+  Fun.GETequipmentledger();
+});
 </script>

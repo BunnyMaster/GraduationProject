@@ -2,62 +2,36 @@
   <div class="out" ref="out">
     <el-page-header @back="goBack" style="color: #409eff; font-size: 20px">
       <template #content>
-        <span
-          class="text-large font-600 mr-3"
-          style="color: #409eff; cursor: default"
-        >
-          先去首页预览
-        </span>
+        <span class="text-large font-600 mr-3" style="color: #409eff; cursor: default"> 先去首页预览 </span>
       </template>
     </el-page-header>
     <!-- 登录 -->
     <div class="login_box">
       <div class="top">
         <!-- 左边的 -->
-        <div
-          class="top-left"
-          :class="{ 'top-active': LoginData.LoginActive }"
-          @click="LoginFun.ChangeLogin(true)"
-        >
-          登录
-        </div>
+        <div class="top-left" :class="{ 'top-active': LoginData.LoginActive }" @click="LoginFun.ChangeLogin(true)">登录</div>
         <!-- </div>右边的 -->
-        <div
-          class="top-right"
-          :class="{ 'top-active': !LoginData.LoginActive }"
-          @click="LoginFun.ChangeLogin(false)"
-        >
-          注册
-        </div>
+        <div class="top-right" :class="{ 'top-active': !LoginData.LoginActive }" @click="LoginFun.ChangeLogin(false)">注册</div>
       </div>
       <div class="bottom">
         <!-- 登录内容 -->
-        <div
-          class="login_content"
-          :class="{ LoginShowActive: !LoginData.LoginActive }"
-        >
+        <div class="login_content" :class="{ LoginShowActive: !LoginData.LoginActive }">
           <!-- 登录 -->
           <div class="UserName">
             <label for="LoginName">用户名</label>
             <input
               type="text"
               name="text"
-              v-model="LoginData.LoginUserNameInput"
+              v-model="Login.UserName"
               id="LoginName"
               placeholder="请输入用户名/邮箱/手机号"
+              @blur="LoginFun.InputUserNameIsTrue()"
               @input="LoginFun.InputUserNameIsTrue()"
             />
-            <el-icon
-              :size="16"
-              color="#fff"
-              v-show="LoginData.LoginUserNameInput"
-              @click="LoginFun.ClearInput()"
-            >
+            <el-icon :size="16" color="#fff" v-show="LoginData.LoginUserNameInput" @click="LoginFun.ClearInput()">
               <CloseBold />
             </el-icon>
-            <span v-if="LoginData.LoginNameInfo">
-              用户名必须是邮箱或者手机号位数在6~32之间
-            </span>
+            <span v-if="LoginData.LoginNameInfo"> 用户名必须是邮箱或者手机号位数在6~32之间 </span>
           </div>
           <!-- 密码 -->
           <div class="UserPwd">
@@ -67,85 +41,47 @@
               name="password"
               id="LoginPassword"
               placeholder="请输入8-16位密码"
-              v-model="LoginData.LoginPwd"
+              v-model="Login.UserPwd"
               @input="LoginFun.InputPwdIsTrue()"
+              @blur="LoginFun.InputPwdIsTrue()"
             />
             <br />
             <span v-if="LoginData.LoginPwdInfo">密码必须在8-16位之间</span>
             <!--            密码显示-->
-            <el-icon
-              :size="16"
-              color="#fff"
-              v-if="LoginData.LoginUserPwdIsShow"
-              @click="LoginData.LoginUserPwdIsShow = false"
-            >
+            <el-icon :size="16" color="#fff" v-if="LoginData.LoginUserPwdIsShow" @click="LoginData.LoginUserPwdIsShow = false">
               <Hide />
             </el-icon>
             <!--            密码隐藏-->
-            <el-icon
-              :size="16"
-              color="#fff"
-              v-else
-              @click="LoginData.LoginUserPwdIsShow = true"
-            >
+            <el-icon :size="16" color="#fff" v-else @click="LoginData.LoginUserPwdIsShow = true">
               <View />
             </el-icon>
           </div>
-          <el-button
-            id="LoginBtn"
-            type="primary"
-            :disabled="LoginData.LoginDisable"
-          >
-            登录
-          </el-button>
+          <el-button id="LoginBtn" type="primary" :disabled="LoginData.LoginDisable" @click="LoginFun.UserLogin()"> 登录 </el-button>
         </div>
         <!-- 注册内容 -->
-        <div
-          class="register_content"
-          :class="{ LoginShowActive: LoginData.LoginActive }"
-        >
+        <div class="register_content" :class="{ LoginShowActive: LoginData.LoginActive }">
           <!-- 登录 -->
           <div class="UserName">
             <label for="RegiName">用户名</label>
-            <input
-              type="text"
-              name="username"
-              id="RegiName"
-              placeholder="请输入邮箱/手机号/用户名"
-            />
+            <input type="text" name="username" id="RegiName" placeholder="请输入邮箱/手机号/用户名" v-model="register.UserName" />
           </div>
           <!-- 密码 -->
           <div class="UserPwd">
             <label for="LoginPassword1">密码</label>
-            <input
-              type="password"
-              name="password1"
-              id="LoginPassword1"
-              placeholder="请输入8-16位密码"
-            />
+            <input type="password" name="password1" id="LoginPassword1" placeholder="请输入8-16位密码" v-model="register.UserPwd1" />
           </div>
           <!-- 确认密码 -->
           <div class="UserPwd2">
             <label for="LoginPassword2">确认密码</label>
-            <input
-              type="password"
-              name="password2"
-              id="LoginPassword2"
-              placeholder="请再次输入密码"
-            />
+            <input type="password" name="password2" id="LoginPassword2" placeholder="请再次输入密码" v-model="register.UserPwd2" />
           </div>
           <!-- 验证码 -->
           <div class="VerificationCode">
             <label for="Verification_Code">验证码</label>
-            <input
-              type="text"
-              name="password"
-              id="Verification_Code"
-              placeholder="请输入验证码"
-            />
+            <input type="text" name="password" id="Verification_Code" placeholder="请输入验证码" v-model="register.Code" />
             <button>获取验证码</button>
           </div>
-          <button type="submit" id="LoginBtn">确认</button>
+          <button type="submit" id="LoginBtn" @click="LoginFun.UserRegister()">确认</button>
         </div>
       </div>
     </div>
@@ -156,14 +92,29 @@
 import { onMounted, reactive, ref, watch } from "vue";
 import { CloseBold, Hide, View } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import login from "@/store/APIFile/1Login";
+import { ElMessage } from "element-plus";
 const out: HTMLDivElement = ref(null);
 const router = useRouter();
+const store = useStore();
 const goBack = () => {
   router.push("/");
 };
 
+var register: object = reactive({
+  UserName: "bunny",
+  UserPwd1: "123456abc",
+  UserPwd2: "123456abc",
+  Code: "",
+});
+
+var Login: object = reactive({
+  UserName: "bunny",
+  UserPwd: "123456abc",
+});
+
 const LoginData = reactive({
-  LoginUserName: "",
   LoginActive: true,
   LoginUserNameInput: "",
   LoginUserPwdIsShow: true,
@@ -187,7 +138,7 @@ const LoginFun = reactive({
   },
   //  验证密码输入是否正确
   InputPwdIsTrue() {
-    if (LoginData.LoginPwd.length >= 8 && LoginData.LoginPwd.length <= 16) {
+    if (Login.UserPwd.length >= 8 && Login.UserPwd.length <= 16) {
       LoginData.LoginPwdInfo = false;
       LoginData.LoginPwdDisable = true;
     } else {
@@ -197,15 +148,61 @@ const LoginFun = reactive({
   },
   //  判断用户名输入是否正确
   InputUserNameIsTrue() {
-    if (
-      LoginData.LoginUserNameInput.length >= 6 &&
-      LoginData.LoginUserNameInput.length <= 32
-    ) {
+    if (Login.UserName.length >= 4 && Login.UserName.length <= 32) {
       LoginData.LoginNameDisable = true;
       LoginData.LoginNameInfo = false;
     } else {
       LoginData.LoginNameDisable = false;
       LoginData.LoginNameInfo = true;
+    }
+  },
+  //  TODO 用户注册
+  async UserRegister() {
+    var { UserName, UserPwd1, UserPwd2 } = register;
+    let data: object = {
+      UserName,
+      UserPwd1,
+    };
+    if (UserName && UserPwd1 && UserPwd2) {
+      try {
+        let result = await store.dispatch("PostRegister", data);
+        ElMessage({
+          showClose: true,
+          message: `注册成功 ${result.code}`,
+          type: "success",
+          center: true,
+        });
+        LoginData.LoginActive = true;
+      } catch (e) {
+        ElMessage({
+          showClose: true,
+          message: `注册失败 ${e.message}`,
+          type: "error",
+          center: true,
+        });
+      }
+    }
+  },
+  //  TOOD 用户登录
+  async UserLogin() {
+    ElMessage.closeAll();
+    try {
+      let result = await store.dispatch("PostLogin", Login);
+      ElMessage({
+        showClose: true,
+        message: `登录成功 ${result.code}`,
+        type: "success",
+        center: true,
+      });
+      localStorage.setItem("USERINFO", JSON.stringify(result.data[0]));
+      router.push("/");
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: `登录失败-${e.message}`,
+        type: "error",
+        center: true,
+      });
     }
   },
 });
@@ -222,8 +219,7 @@ onMounted(() => {
   watch(
     [() => LoginData.LoginNameDisable, () => LoginData.LoginPwdDisable],
     () => {
-      if (LoginData.LoginNameDisable && LoginData.LoginPwdDisable)
-        LoginData.LoginDisable = false;
+      if (LoginData.LoginNameDisable && LoginData.LoginPwdDisable) LoginData.LoginDisable = false;
     },
     { deep: true },
   );

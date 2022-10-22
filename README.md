@@ -359,6 +359,78 @@ const tableList = ["设备条码", "设备类型", "设备规格", "所属工站
 const tableList = ["设备条码", "设备类型", "设备规格", "采购时间", "创建时间", "所属工站", "所属工位", "所有权部门", "称量范围", "供应商", "生产商", "资产负责人"];
 ~~~
 
+## 维修订单
 
+### 创建数据库
 
-### 
+~~~sql
+CREATE TABLE `graduation`.`repairbill` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '\n\n\n\n\n',
+  `Time` VARCHAR(45) NULL,
+  `Name` VARCHAR(45) NULL,
+  `State` VARCHAR(45) NULL,
+  `City` VARCHAR(45) NULL,
+  `Address` VARCHAR(45) NULL,
+  `DeviceName` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+~~~
+
+## 企业
+
+### 创建数据库
+
+~~~sql
+CREATE TABLE `graduation`.`enterprise` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `EnterpriseLeave` VARCHAR(45) NULL COMMENT '单位层次',
+    `CompanyName` VARCHAR(45) NULL COMMENT '单位名称',
+    `CompanyRegisteredCapital` VARCHAR(45) NULL COMMENT '企业注册资本',
+    `Corp` VARCHAR(45) NULL COMMENT '法人',
+    `CorpIdentityCard` VARCHAR(45) NULL COMMENT '法人身份证',
+    `CompanyAddress` VARCHAR(45) NULL COMMENT '企业地址',
+    `PostalCode` VARCHAR(45) NULL COMMENT '邮政编码',
+    PRIMARY KEY (`id`));
+~~~
+
+### 插入基本数据
+
+~~~sql
+~~~
+
+## 工厂
+
+~~~sql
+CREATE TABLE `graduation`.`factory` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `CreateTime` VARCHAR(45) NULL COMMENT '创建时间',
+    `StructureArea` VARCHAR(45) NULL COMMENT '建筑面积',
+    `factoryName` VARCHAR(45) NULL COMMENT '工厂名称',
+    `InCompany` VARCHAR(45) NULL COMMENT '所属企业\n',
+    `factoryAdress` VARCHAR(45) NULL,
+    `factoryPhoone` VARCHAR(45) NULL,
+    `factorycol` VARCHAR(45) NULL,
+    `PostalCode` VARCHAR(45) NULL,
+    `Codeempty` VARCHAR(45) NULL,
+    PRIMARY KEY (`id`));
+~~~
+
+## 设备台账
+
+### 创建数据库
+
+~~~sql
+CREATE TABLE `graduation`.`equipmentledger` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `EquipmentLedgerNum` VARCHAR(45) NULL COMMENT '设备编号',
+    `EquipmentType` VARCHAR(45) NULL COMMENT '设备类型',
+    `EquipmentEPEC` VARCHAR(45) NULL COMMENT '设备规格',
+    `EquipmentLedgercol` VARCHAR(45) NULL,
+    `Provider` VARCHAR(45) NULL,
+    `SubPerson` VARCHAR(45) NULL COMMENT '上报人\n',
+    `ToUse` VARCHAR(45) NULL COMMENT '用途\n',
+    `ImportanTime` VARCHAR(45) NULL,
+    `principal` VARCHAR(45) NULL COMMENT '负责人',
+    PRIMARY KEY (`id`));
+~~~
+

@@ -1,18 +1,40 @@
 <template>
-  <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" :size="formSize" status-icon>
+  <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" style="width: 100%" class="demo-ruleForm" :size="formSize" status-icon>
     <!--    简要问题描述-->
-    <el-form-item label="简述问题" prop="name">
-      <el-input v-model="ruleForm.name" placeholder="简要概述问题" />
+    <el-form-item label="简述问题" prop="title">
+      <el-input v-model="ruleForm.title" placeholder="简要概述问题" />
+    </el-form-item>
+    <el-form-item label="提交人姓名" prop="SubName">
+      <el-input v-model="ruleForm.SubName" placeholder="输入姓名" style="width: 166px" />
+    </el-form-item>
+    <el-form-item label="所在城市" prop="City">
+      <el-input v-model="ruleForm.City" placeholder="请输入所在城市" />
+    </el-form-item>
+    <el-form-item label="详细地址" prop="Address">
+      <el-input v-model="ruleForm.Address" placeholder="请输入详细地址" />
+    </el-form-item>
+    <el-form-item label="输入设备名称" prop="DeviceName">
+      <el-input v-model="ruleForm.DeviceName" placeholder="输入设备名称" style="width: 166px" />
     </el-form-item>
     <!--    车间标号选择---开始-->
-    <el-form-item label="车间编号" prop="region">
-      <el-select v-model="ruleForm.region" placeholder="选择设备">
-        <el-option v-for="(DeviceReportingItem, DeviceReportingIndex) in DeviceFaultReportingData.GetDeviceFaultReportingList.DevicTtype" :key="DeviceReportingIndex" :label="DeviceReportingItem" :value="DeviceReportingItem" />
+    <el-form-item label="选择设备" prop="WorkShopNumber">
+      <el-select v-model="ruleForm.WorkShopNumber" placeholder="选择设备">
+        <el-option
+          v-for="(DeviceReportingItem, DeviceReportingIndex) in DeviceFaultReportingData.GetDeviceFaultReportingList.DevicTtype"
+          :key="DeviceReportingIndex"
+          :label="DeviceReportingItem"
+          :value="DeviceReportingItem"
+        />
       </el-select>
     </el-form-item>
-    <el-form-item label="工作区" prop="count">
-      <el-select v-model="ruleForm.count" placeholder="选择工作区">
-        <el-option v-for="(DeviceReportingItem, DeviceReportingIndex) in DeviceFaultReportingData.GetDeviceFaultReportingList.ErroDescription" :key="DeviceReportingIndex" :label="DeviceReportingItem" :value="DeviceReportingItem" />
+    <el-form-item label="选择生产线" prop="WorkAddress">
+      <el-select v-model="ruleForm.WorkAddress" placeholder="选择生产线">
+        <el-option
+          v-for="(DeviceReportingItem, DeviceReportingIndex) in DeviceFaultReportingData.GetDeviceFaultReportingList.ErroDescription"
+          :key="DeviceReportingIndex"
+          :label="DeviceReportingItem"
+          :value="DeviceReportingItem"
+        />
       </el-select>
     </el-form-item>
     <!--    车间选择编号---结束-->
@@ -30,8 +52,8 @@
       </el-col>
     </el-form-item>
     <!--    详细问题描述表-->
-    <el-form-item label="详细问题描述" prop="desc">
-      <el-input v-model="ruleForm.desc" type="textarea" placeholder="在此输入内容......" />
+    <el-form-item label="详细问题描述" prop="detail">
+      <el-input v-model="ruleForm.detail" type="textarea" placeholder="在此输入内容......" />
     </el-form-item>
     <!--    下方提交和重置-->
     <el-form-item>
@@ -46,31 +68,39 @@ import { computed, onMounted, reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
+import dayjs from "dayjs";
 const store = useStore();
 const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
-  name: "",
-  region: "",
-  count: "",
+  title: "",
+  SubName: "",
+  WorkShopNumber: "",
+  WorkAddress: "",
+  City: "",
+  Address: "",
   date1: "",
   date2: "",
-  desc: "",
+  detail: "",
+  DeviceName: "",
 });
 
 const rules = reactive<FormRules>({
-  name: [
+  title: [
     { required: true, message: "简要问题描述未填写", trigger: "blur" },
     { min: 3, max: 30, message: "描述需要在3-30字之间", trigger: "blur" },
   ],
-  region: [
+  SubName: [{ required: true, message: "提交人姓名", trigger: "blur" }],
+  City: [{ required: true, message: "所在城市", trigger: "blur" }],
+  Address: [{ required: true, message: "详细地址", trigger: "blur" }],
+  WorkShopNumber: [
     {
       required: true,
-      message: "请选择所在车间编号",
+      message: "请选择选择设备",
       trigger: "change",
     },
   ],
-  count: [
+  WorkAddress: [
     {
       required: true,
       message: "请选择所在工作区",
@@ -93,16 +123,50 @@ const rules = reactive<FormRules>({
       trigger: "change",
     },
   ],
-  desc: [{ required: true, message: "详细描述问题原因", trigger: "blur" }],
+  detail: [{ required: true, message: "详细描述问题原因", trigger: "blur" }],
 });
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields: any) => {
     if (valid) {
-      console.log("submit!");
+      ElMessage.closeAll();
+      let data = {
+        title: ruleForm.title,
+        Name: ruleForm.SubName,
+        WorkShopNumber: ruleForm.WorkShopNumber,
+        WorkAddress: ruleForm.WorkAddress,
+        Time: dayjs(fields).format("YYYY年MM月DD号 HH:mm:ss "),
+        detail: ruleForm.detail,
+        City: ruleForm.City,
+        DeviceName: ruleForm.DeviceName,
+        Address: ruleForm.Address,
+      };
+
+      try {
+        store.dispatch("ReqRepairList", data);
+        ElMessage({
+          showClose: true,
+          message: `提交成功!!!`,
+          type: "success",
+          center: true,
+        });
+      } catch (e) {
+        ElMessage({
+          showClose: true,
+          message: `${e.message}`,
+          type: "error",
+          center: true,
+        });
+      }
     } else {
-      console.log("error submit!", fields);
+      ElMessage.closeAll();
+      ElMessage({
+        showClose: true,
+        message: `错误,信息不完整`,
+        type: "error",
+        center: true,
+      });
     }
   });
 };

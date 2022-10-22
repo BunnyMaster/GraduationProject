@@ -10,7 +10,11 @@ const AndroidPAD = {
   mutations: {
     GETANDROIDPADLIST(state: any, result: any) {
       state.AllTableList = result.data;
-      state.CountPage = result.AllCount;
+      state.CountPage = result.AllPage;
+    },
+    //  修改AllTable值
+    ChangeAllTableList(state: any, result: any) {
+      state.AllTableList = result;
     },
   },
   actions: {
@@ -23,7 +27,6 @@ const AndroidPAD = {
         Promise.reject(new Error("获取AndroidPAD全部列表失败"));
       }
     },
-
     //  TODO 添加内容
     async POSTAndroidPADAddItem({ commit }: any, data: any) {
       const result = await reqAndroidPADAddItem(data);
@@ -37,6 +40,10 @@ const AndroidPAD = {
       } else {
         Promise.reject(new Error("添加AndroidPAD列表失败"));
       }
+    },
+    //   TODO 修改 AllTableList 值
+    async ChangeAllTableList({ commit }: any, DataLIst: any) {
+      commit("ChangeAllTableList", DataLIst);
     },
   },
 };

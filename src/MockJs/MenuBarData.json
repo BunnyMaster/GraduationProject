@@ -33,10 +33,6 @@
       {
         "Name": "红外对射枪",
         "Link": "/home/main/InfraredCounterGun"
-      },
-      {
-        "Name": "读卡器",
-        "Link": "/home/main/CardReader"
       }
     ],
     "Icon": "Iphone"
@@ -78,7 +74,7 @@
         "Link": "/home/main/StationAndEmployeeInformation"
       }
     ],
-    "Icon": "Files"
+    "Icon": "Avatar"
   },
   {
     "id": 4,
@@ -174,7 +170,7 @@
         "Link": "/home/main/stationrelationship"
       }
     ],
-    "Icon": "Management"
+    "Icon": "SuitcaseLine"
   },
   {
     "id": 8,
@@ -197,7 +193,7 @@
         "Link": "/home/main/SectionQualityInspection"
       }
     ],
-    "Icon": "Management"
+    "Icon": "WarnTriangleFilled"
   },
   {
     "id": 9,
@@ -206,10 +202,6 @@
       {
         "Name": "设备台账",
         "Link": "/home/main/EquipmentLedger"
-      },
-      {
-        "Name": "设备保养计划",
-        "Link": "/home/main/EquipmentMaintenancePlan"
       },
       {
         "Name": "设备报修派工记录",
@@ -224,6 +216,6 @@
         "Link": "/home/main/EquipmentMaintenanceRecord"
       }
     ],
-    "Icon": "Management"
+    "Icon": "CreditCard"
   }
 ]

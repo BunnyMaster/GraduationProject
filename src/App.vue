@@ -5,6 +5,7 @@
 import { onMounted, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 ["contextmenu", "copy"].forEach(function (ev) {
   document.addEventListener(ev, function (ev) {
@@ -13,6 +14,7 @@ import { useStore } from "vuex";
   });
 });
 const store = useStore();
+const router = useRouter();
 // TODO  app函数
 const APPFun = reactive({
   // TODO  获取菜单栏数据
@@ -22,6 +24,9 @@ const APPFun = reactive({
 });
 // TODO 获取菜单栏数据
 onMounted(async () => {
+  if (!localStorage.getItem("USERINFO")) {
+    router.push("/login");
+  }
   try {
     await APPFun.GetMenuBarList();
   } catch (e: Error) {

@@ -51,16 +51,20 @@
       <div class="userInfo">
         <!-- 头像 -->
         <div class="headImg">
-          <img src="./images/header-default.jpg" alt="用户头像" />
+          <el-avatar :size="100" :src="HeaderData.UserInfoLIst.HeaderImage" @error="errorHandler">
+            <img src="./images/header-default.jpg" />
+            <!--            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />-->
+          </el-avatar>
+          <!--          <img src="./images/header-default.jpg" alt="用户头像" />-->
         </div>
         <!-- 用户名 -->
         <div class="UserName">
-          <h1>用户名用户名</h1>
+          <h1>{{ HeaderData.UserInfoLIst.Name }} {{ HeaderData.UserInfoLIst.UserName }}</h1>
         </div>
         <!-- 登录和退出登录 -->
         <div class="Login-Loginout">
-          <a href="">点击退出</a>
-          <a href="">重新注册</a>
+          <a href="JavaScript:;" @click="HeaderFun.LoginOut()">点击退出</a>
+          <router-link to="/login">重新注册</router-link>
         </div>
       </div>
       <el-tooltip class="box-item" effect="dark" :content="HeaderData.FullScreenFlag ? '全屏显示' : '退出全屏'" placement="bottom">
@@ -75,20 +79,23 @@
 <script setup lang="ts">
 import { Operation, Close, FullScreen } from "@element-plus/icons-vue";
 import * as dayjs from "dayjs";
-import { nextTick, onMounted, reactive, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
+import { ElMessage } from "element-plus";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 const DateList: string[] = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 var dayNumber: number = dayjs(new Date()).format("YYYY-MM-DD d HH:mm:ss").split(" ")[1];
 var NowTimeDay: number = dayjs(new Date()).format("YYYY-MM-DD d HH:mm:ss").split(" ")[1].replace(dayNumber, DateList[dayNumber]);
+const errorHandler = () => true;
 const HeaderData = reactive({
   NowTime: dayjs(new Date()).format(`YYYY年MM月DD号 ${NowTimeDay} HH:mm:ss`),
   IconFlag: true,
   FullScreenFlag: true,
   HeaderTitle: "主题",
+  UserInfoLIst: computed(() => store.state.Login.UserInfo || [{}]),
 });
 const HeaderFun = reactive({
   //实时时间 --- 改变日期
@@ -112,6 +119,32 @@ const HeaderFun = reactive({
       HeaderData.FullScreenFlag = !HeaderData.FullScreenFlag;
     }
   },
+  //  TODO 获取用户信息
+  async GetUserInfo() {
+    let localInfo: any = localStorage.getItem("USERINFO");
+    try {
+      await store.dispatch("GetLoginInfo", JSON.parse(localInfo).UserName);
+    } catch (e) {
+      ElMessage.closeAll();
+      ElMessage({
+        showClose: true,
+        message: `${e.message}`,
+        type: "error",
+        center: true,
+      });
+    }
+  },
+  //  TODO 退出登录
+  LoginOut() {
+    ElMessage.closeAll();
+    ElMessage({
+      showClose: true,
+      message: "正在跳转......",
+      type: "success",
+      center: true,
+    });
+    router.push("/login");
+  },
 });
 onMounted(() => {
   nextTick(() => HeaderFun.ChangeNowTime());
@@ -122,6 +155,7 @@ onMounted(() => {
     },
     { deep: true, immediate: true },
   );
+  HeaderFun.GetUserInfo();
 });
 </script>
 
@@ -362,7 +396,8 @@ onMounted(() => {
         margin-top: 5px;
         cursor: pointer;
 
-        img {
+        img,
+        .el-avatar {
           width: 100%;
           height: 100%;
         }

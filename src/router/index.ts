@@ -15,7 +15,6 @@ const loadingInstance = ElLoading.service({
 });
 // 1.加载进度条：
 router.beforeEach((to, from, next) => {
-  // console.log(to);// 去往
   NProgress.start();
   loadingInstance;
   next();

@@ -1,4 +1,38 @@
 <template>
+  <!--  对话框-->
+  <el-dialog v-model="dialogVisible" title="删除警告" width="50%" draggable>
+    <h1 style="margin: 10px; text-align: center; color: red">数据不易,这只会在网页中移出，重新刷新后会显示</h1>
+    <el-table :data="Data.DeleteRepairBillLsit" style="width: 100%">
+      <template #empty>
+        <el-empty>
+          <template #description> 暂无数据</template>
+        </el-empty>
+      </template>
+      <el-table-column fixed prop="id" label="id号" align="center" width="100" />
+      <el-table-column prop="Time" label="时间" width="200" align="center">
+        <template #default="scope">
+          <span style="justify-content: center">{{ scope.row.Time.replace("T", " ").replace(".000Z", "") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="Name" label="姓名" width="120" align="center" />
+      <el-table-column prop="State" label="状态" width="120" align="center">
+        <template #default="scope">
+          <el-tag :type="Fun.RepairSate(scope.row.State)" disable-transitions="disable-transitions">
+            {{ scope.row.State }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="City" label="城市" width="120" align="center" />
+      <el-table-column prop="Address" label="地址" width="400" align="center" />
+      <el-table-column prop="DeviceName" label="压缩" width="120" align="center" />
+    </el-table>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">返回</el-button>
+        <el-button type="primary" @click="Fun.SureDeleteData(Data.DeleteRepairBillLsit)"> 确认删除 </el-button>
+      </span>
+    </template>
+  </el-dialog>
   <el-container>
     <!--    TODO 头部-->
     <el-header>
@@ -10,35 +44,53 @@
       <!--  TODO   头像-->
       <div class="demo-type demo-Header">
         <div class="HeaderCountent">
-          <el-avatar :size="100" src="https://empty" @error="errorHandler">
+          <el-avatar :size="100" :src="Data.UserInfoLIst.HeaderImage" @error="errorHandler">
             <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
           </el-avatar>
-          <h1>普通用户</h1>
+          <h1>{{ Data.UserInfoLIst.Name }}</h1>
           <!--     TODO     报修数量-->
           <div class="RepairNumber">
             <h1>设备报修数量</h1>
             <div class="demo-progress">
-              <el-progress :percentage="50" />
-              <el-progress :percentage="100" :format="format" />
-              <el-progress :percentage="100" status="success" />
-              <el-progress :percentage="100" status="warning" />
-              <el-progress :percentage="50" status="exception" />
+              <el-progress :percentage="progress_nodo ? progress_nodo : 100" :format="format" :stroke-width="16" />
+              <el-progress :percentage="progress_error + progress_warning ? progress_error + progress_warning : 100" :format="format" status="warning" :stroke-width="16" />
+              <el-progress :percentage="progress_success ? progress_success : 100" :format="format" status="success" :stroke-width="16" />
+              <el-progress :percentage="progress_warning ? progress_warning : 100" :format="format" status="warning" :stroke-width="16" />
+              <el-progress :percentage="progress_error ? progress_error : 100" :format="format" status="exception" :stroke-width="16" />
             </div>
           </div>
           <!--TODO 待处理的表单-->
           <div class="WaitTable">
             <h1>设备待处理</h1>
-            <el-table :data="tableData" style="width: 100%">
-              <el-table-column fixed prop="date" label="Date" width="150" />
-              <el-table-column prop="name" label="姓名" width="120" />
-              <el-table-column prop="state" label="状态" width="120" />
-              <el-table-column prop="city" label="城市" width="120" />
-              <el-table-column prop="address" label="地址" width="600" />
-              <el-table-column prop="zip" label="压缩" width="120" />
-              <el-table-column :fixed="'right'" label="Operations" width="120">
-                <template #default>
-                  <el-button link type="primary" size="small" @click="handleClick">编辑</el-button>
-                  <el-button link type="primary" size="small">删除</el-button>
+            <el-table :data="Data.RepairBillLsit" style="width: 100%">
+              <template #empty>
+                <el-empty>
+                  <template #description> 暂无数据</template>
+                  <el-button type="primary" @click="Fun.Refshash()">刷新</el-button>
+                </el-empty>
+              </template>
+              <el-table-column fixed prop="id" label="id号" align="center" width="100" />
+              <el-table-column prop="Time" label="时间" width="200" align="center">
+                <template #default="scope">
+                  <span style="justify-content: center">{{ scope.row.Time.replace("T", " ").replace(".000Z", "") }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="Name" label="姓名" width="120" align="center" />
+              <el-table-column prop="State" label="状态" width="120" align="center">
+                <template #default="scope">
+                  <el-tag :type="Fun.RepairSate(scope.row.State)" disable-transitions="disable-transitions">
+                    {{ scope.row.State }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="City" label="城市" width="120" align="center" />
+              <el-table-column prop="Address" label="地址" width="400" align="center" />
+              <el-table-column prop="DeviceName" label="压缩" width="120" align="center" />
+              <el-table-column :fixed="'right'" label="操作" width="120" align="center">
+                <template #default="scope">
+                  <!--                  <el-button link type="primary" size="small" @click="handleClick">编辑</el-button>-->
+                  <el-button link type="primary" size="small" v-if="scope.row.State !== '完成'" @click="Fun.DeleteState(scope.row, scope)">删除</el-button>
+                  <el-button link type="success" size="small" v-else disabled>已经完成啦</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -46,16 +98,16 @@
           <!--      TODO 用户详细信息-->
           <div class="UserDetail">
             <el-descriptions title="用户详细信息" direction="vertical" :column="16" border>
-              <el-descriptions-item align="center" label="创建ID">5asd565adas5</el-descriptions-item>
-              <el-descriptions-item align="center" label="创建时间">2022-10-10</el-descriptions-item>
-              <el-descriptions-item align="center" label="用户名" :span="2">UserName</el-descriptions-item>
-              <el-descriptions-item align="center" label="年龄" :span="2">16</el-descriptions-item>
-              <el-descriptions-item align="center" label="邮箱">18100000000@qq.com</el-descriptions-item>
-              <el-descriptions-item align="center" label="电话" :span="2">180123456789</el-descriptions-item>
-              <el-descriptions-item align="center" label="QQ" :span="2">1319990015</el-descriptions-item>
-              <el-descriptions-item align="center" label="微信" :span="2">65sasas223asd</el-descriptions-item>
+              <el-descriptions-item align="center" label="创建ID">{{ Data.UserInfoLIst.id }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="创建时间">{{ Data.UserInfoLIst.CreateTime.replace("T", " ").replace(".000Z", "") }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="用户名" :span="2">{{ Data.UserInfoLIst.UserName }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="年龄" :span="2">{{ Data.UserInfoLIst.Age }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="邮箱">{{ Data.UserInfoLIst.Email }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="电话" :span="2">{{ Data.UserInfoLIst.Phone }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="QQ" :span="2">{{ Data.UserInfoLIst.QQ }}</el-descriptions-item>
+              <el-descriptions-item align="center" label="微信" :span="2">{{ Data.UserInfoLIst.WeChat }}</el-descriptions-item>
               <el-descriptions-item align="center" label="属性">
-                <el-tag size="small">School</el-tag>
+                <el-tag size="small">{{ Data.UserInfoLIst.Name }}</el-tag>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -71,17 +123,142 @@
 </template>
 <script lang="ts" setup>
 import { HomeFilled } from "@element-plus/icons-vue";
-import { onMounted } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import * as echarts from "echarts";
-const errorHandler = () => true;
+import { useStore } from "vuex";
+import { ElMessage } from "element-plus";
+const store = useStore();
 
-const format = percentage => (percentage === 100 ? "Full" : `${percentage}%`);
-const handleClick = () => {
-  console.log("click");
-};
+const errorHandler = () => true;
+const dialogVisible = ref(false);
+const format = (percentage: any) => (percentage === 100 ? "全部完成" : `${percentage}%`);
+const Data = reactive({
+  UserInfoLIst: computed(() => store.state.Login.UserInfo || [{}]),
+  RepairBillLsit: store.state.Login.RepairBill || {},
+  DeleteRepairBillLsit: [],
+});
+var progress_success = computed(() => {
+  let flag = 0;
+  Data.RepairBillLsit.forEach((Item: any) => {
+    if (Item.State === "完成") flag++;
+  });
+  let count: number = parseInt(Data.RepairBillLsit.length / flag + "");
+  if (count) return count;
+});
+var progress_warning = computed(() => {
+  let flag = 0;
+  Data.RepairBillLsit.forEach((Item: any) => {
+    if (Item.State === "警告") flag++;
+  });
+  let count: number = parseInt(Data.RepairBillLsit.length / flag + "");
+  if (count) return count;
+});
+var progress_error = computed(() => {
+  let flag = 0;
+  Data.RepairBillLsit.forEach((Item: any) => {
+    if (Item.State === "错误") flag++;
+  });
+  let count: number = parseInt(Data.RepairBillLsit.length / flag + "");
+  if (count) return count;
+});
+var progress_nodo = computed(() => {
+  let flag = 0;
+  Data.RepairBillLsit.forEach((Item: any) => {
+    if (Item.State === "未完成") flag++;
+  });
+  let count: number = parseInt(Data.RepairBillLsit.length / flag + "");
+  if (count) return count;
+});
+const Fun = reactive({
+  // TODO 刷新
+  Refshash() {
+    Fun.GetUserInfo();
+  },
+  // TODO 设置用户信息
+  async SetUserInfo() {
+    localStorage.setItem("USERINFO", JSON.stringify(Data.UserInfoLIst));
+  },
+  //  TODO 获取用户信息
+  async GetUserInfo() {
+    let localInfo: any = localStorage.getItem("USERINFO");
+    try {
+      await store.dispatch("GetLoginInfo", JSON.parse(localInfo).UserName);
+      await store.dispatch("GetRepairBill", JSON.parse(localInfo).UserName);
+    } catch (e) {
+      ElMessage.closeAll();
+      ElMessage({
+        showClose: true,
+        message: `${e.message}`,
+        type: "error",
+        center: true,
+      });
+    }
+  },
+  //   TODO 未修状态
+  RepairSate(state: string) {
+    let flag = "";
+    let warning = 0;
+    let success = 0;
+    let exception = 0;
+
+    switch (state) {
+      case "完成":
+        flag = "success";
+        success++;
+        break;
+      case "警告":
+        flag = "warning";
+        warning++;
+        break;
+      case "错误":
+        flag = "danger";
+        exception++;
+        break;
+      case "未修":
+        flag = "";
+        break;
+    }
+    return flag;
+  },
+  //   TODO 删除状态栏
+  DeleteState(StateRow: object, State: object) {
+    dialogVisible.value = true;
+    let list = [StateRow];
+    Data.DeleteRepairBillLsit = list;
+  },
+  //  TODO 确认删除列表
+  SureDeleteData(DeleteRepairBillLsit: string[]) {
+    ElMessage.closeAll();
+    try {
+      ElMessage({
+        showClose: true,
+        message: "删除成功,仅在网页生效",
+        type: "success",
+        center: true,
+      });
+      let list = Data.RepairBillLsit.filter((Item: any) => Item.id !== DeleteRepairBillLsit[0].id);
+      Data.RepairBillLsit = list;
+      dialogVisible.value = false;
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: "删除失败",
+        type: "error",
+        center: true,
+      });
+    }
+  },
+});
 onMounted(() => {
   change();
   changetype();
+  // Fun.SetUserInfo();
+  Fun.GetUserInfo();
+  watch(
+    () => store.state.Login.RepairBill,
+    () => (Data.RepairBillLsit = store.state.Login.RepairBill),
+    { deep: true },
+  );
 });
 // 基本柱形图
 const change = () => {
@@ -242,64 +419,6 @@ const changetype = () => {
     machart.resize();
   });
 };
-const tableData = [
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-  {
-    date: "2016-05-08",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-  {
-    date: "2016-05-06",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-  {
-    date: "2016-05-07",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-  },
-];
 </script>
 
 <style scoped lang="less">

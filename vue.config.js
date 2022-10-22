@@ -16,6 +16,9 @@ module.exports = defineConfig({
       "/api": {
         target: "http://localhost:6666", //这里填入你要请求的接口的前缀
       },
+      "/prod-api": {
+        target: "http://www.029tec.com", //这里填入你要请求的接口的前缀
+      },
       //}
     },
   },

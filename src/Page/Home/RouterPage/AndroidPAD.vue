@@ -71,11 +71,18 @@
     </template>
   </el-dialog>
   <!--  项目名-->
-  <HomeTableCommon :tableList="tableList" :tableData="tableData" @ChangepageSize="Fun.ChangepageSize" @ChangeCurrentChange="Fun.ChangeCurrentChange">
+  <HomeTableCommon
+    :tableList="tableList"
+    :tableData="form.tableData"
+    :AllPageSize="form.AllPageSize"
+    @ChangepageSize="Fun.ChangepageSize"
+    @ChangeCurrentChange="Fun.ChangeCurrentChange"
+    @ChangeTableData="Fun.ChangeTableData"
+  >
     <template #default>
       <el-table
         v-bind="$route.meta.title ? (loading = false) : (loading = true)"
-        :data="tableData"
+        :data="form.tableData"
         style="width: 100%"
         stripe
         :row-class-name="Fun.tableRowClassName"
@@ -102,7 +109,9 @@
         <el-table-column align="center" :fixed="'left'" sortable prop="DeviceType" label="设备规格" width="200" style="text-align: center">
           <template #default="scope">
             <div style="display: flex; justify-content: center; align-items: center">
-              <el-icon><Iphone /></el-icon>
+              <el-icon>
+                <Iphone />
+              </el-icon>
               <span style="margin-left: 10px">{{ scope.row.DeviceType }}</span>
             </div>
           </template>
@@ -121,7 +130,9 @@
         <!--   TODO ---   所属工站-->
         <el-table-column align="center" prop="workStation" label="所属工站" width="100" :filters="fileter" :filter-method="Fun.filterTag" filter-placement="bottom-end">
           <template #default="scope">
-            <el-tag :type="scope.row.workStation === '金枪鱼生产线' ? '' : 'success'" disable-transitions>{{ scope.row.workStation }}</el-tag>
+            <el-tag :type="scope.row.workStation === '金枪鱼生产线' ? '' : 'success'" disable-transitions>
+              {{ scope.row.workStation }}
+            </el-tag>
           </template>
         </el-table-column>
         <!--    TODO ---  所属工位-->
@@ -135,7 +146,9 @@
           filter-placement="bottom-end"
         >
           <template #default="scope">
-            <el-tag :type="scope.row.SubordinateStation === '1号位' ? '' : 'success'" disable-transitions>{{ scope.row.SubordinateStation }}</el-tag>
+            <el-tag :type="scope.row.SubordinateStation === '1号位' ? '' : 'success'" disable-transitions>
+              {{ scope.row.SubordinateStation }}
+            </el-tag>
           </template>
         </el-table-column>
         <!--   TODO ---   分辨率-->
@@ -185,7 +198,9 @@
           filter-placement="bottom-end"
         >
           <template #default="scope">
-            <el-tag :type="scope.row.DepartmentOfOwnership === ('生产技术' || '技术部') ? '' : 'success'" disable-transitions>{{ scope.row.DepartmentOfOwnership }}</el-tag>
+            <el-tag :type="scope.row.DepartmentOfOwnership === ('生产技术' || '技术部') ? '' : 'success'" disable-transitions>
+              {{ scope.row.DepartmentOfOwnership }}
+            </el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -264,8 +279,6 @@ const tableList = [
 ];
 const loading = ref(true);
 var dialogFormVisible = ref(false);
-const tableData: User[] = computed(() => store.state.AndroidPAD.AllTableList);
-
 const form = reactive({
   name: {
     id: uuid.v4(),
@@ -289,6 +302,8 @@ const form = reactive({
   MenuBarList: computed(() => store.state.MenuBar.DevicTtype),
   currentPage: 0, // 前往多少页
   pageSize: 10, // 每页显示多少跳
+  AllPageSize: computed(() => store.state.AndroidPAD.CountPage),
+  tableData: computed(() => store.state.AndroidPAD.AllTableList),
 });
 
 const Fun = reactive({
@@ -372,12 +387,24 @@ const Fun = reactive({
   },
   //  TODO ChangeCurrentPage && pageSize
   ChangepageSize(Val: any) {
-    form.currentPage = Val * form.pageSize;
+    form.currentPage = (Val - 1) * form.pageSize;
     Fun.Refshash();
   },
   ChangeCurrentChange(Val: any) {
     form.pageSize = Val;
     Fun.Refshash();
+  },
+  // TODO 改变数组ChangeTableData
+  ChangeTableData(Val: string) {
+    let list: object = [];
+    if (Val) {
+      form.tableData.forEach((Name: any) => {
+        if (Name.supplier.toString() === Val.toString()) list.push(Name);
+      });
+      form.tableData = computed(() => list);
+    } else {
+      form.tableData = computed(() => store.state.AndroidPAD.AllTableList);
+    }
   },
 });
 
