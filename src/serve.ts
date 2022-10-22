@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+var app = express();
 
 // TODO 配置表单数据中间件
 app.use(express.urlencoded({ extended: false }));
