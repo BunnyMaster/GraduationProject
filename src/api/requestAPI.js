@@ -141,7 +141,53 @@ export const reqRepairDispach = query => {
 export const reqDeleteRepairDispach = query => {
   return Request({ url: `/equipment/DeleteRepairDispach?index=${query.index}`, method: "POST" });
 };
+
 // TODO 获取设备台账信息
 export const reqGETequipmentledger = query => {
   return Request({ url: `/equipment/GETequipmentledger?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取员工上岗记录信息 /equipment/MountGuardRecords?index=1&pageSize=10
+export const reqGETMountGuardRecords = query => {
+  return Request({ url: `/equipment/MountGuardRecords?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取订单管理信息
+export const reqGETOrderManagement = query => {
+  return Request({ url: `/equipment/OrderManagement?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取维护订单信息
+export const reqGETRepairOrderMaintenance = query => {
+  return Request({ url: `/equipment/RepairOrderMaintenance?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取获取工艺数据  ProcessMaintenance-ProcessFlowMaintenance
+export const reqGETProcessMaintenance = query => {
+  return Request({ url: `/equipment/ProcessMaintenance?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取工艺流程数据  ProcessMaintenance-ProcessFlowMaintenance
+export const reqGETProcessFlowMaintenance = query => {
+  return Request({ url: `/equipment/ProcessFlowMaintenance?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取工艺和流程 ProcessMaintenance-ProcessFlowMaintenance单信息ProcessMaintenanceANDFlowMaintenance
+export const reqGETProcessMaintenanceANDFlowMaintenance = query => {
+  return Request({ url: `/equipment/ProcessMaintenanceANDFlowMaintenance?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取员工表 PerformanceStaff
+export const reqGETPerformanceStaff = query => {
+  return Request({ url: `/equipment/PerformanceStaff?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取配置表 PerformanceConfig
+export const reqGETPerformanceConfig = query => {
+  return Request({ url: `/equipment/PerformanceConfig?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
+};
+
+// TODO 获取总表 Performance
+export const reqGETPerformance = query => {
+  return Request({ url: `/equipment/Performance?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
 };

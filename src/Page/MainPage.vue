@@ -53,10 +53,10 @@
             <h1>设备报修数量</h1>
             <div class="demo-progress">
               <el-progress :percentage="progress_nodo ? progress_nodo : 100" :format="format" :stroke-width="16" />
-              <el-progress :percentage="progress_error + progress_warning ? progress_error + progress_warning : 100" :format="format" status="warning" :stroke-width="16" />
+              <el-progress :percentage="progress_error + progress_warning ? progress_error + progress_warning : 0" :format="format" status="warning" :stroke-width="16" />
               <el-progress :percentage="progress_success ? progress_success : 100" :format="format" status="success" :stroke-width="16" />
-              <el-progress :percentage="progress_warning ? progress_warning : 100" :format="format" status="warning" :stroke-width="16" />
-              <el-progress :percentage="progress_error ? progress_error : 100" :format="format" status="exception" :stroke-width="16" />
+              <el-progress :percentage="progress_warning ? progress_warning : 0" :format="format" status="warning" :stroke-width="16" />
+              <el-progress :percentage="progress_error ? progress_error : 0" :format="format" status="exception" :stroke-width="16" />
             </div>
           </div>
           <!--TODO 待处理的表单-->
@@ -448,7 +448,8 @@ const changetype = () => {
     height: 400px;
     background-color: #fff;
     .HeaderCountent {
-      width: 90%;
+      float: left;
+      width: 1500px;
       height: 250px;
       border-bottom: 2px solid #ccc;
       padding-bottom: 10px;
@@ -474,6 +475,7 @@ const changetype = () => {
         }
         .demo-progress {
           position: absolute;
+          float: left;
           width: 100%;
           height: 200px;
           top: 50%;
@@ -517,6 +519,7 @@ const changetype = () => {
   height: 240px;
   margin-left: 30px;
   h1 {
+    float: left;
     width: 100%;
     height: 50px;
     margin-top: 0;

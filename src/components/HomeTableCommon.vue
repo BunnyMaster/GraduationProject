@@ -10,9 +10,8 @@
           <span class="HomeHeaderGroup">组别:{{ Data.HomeHeaderTitle }}</span>
           <!--          TODO 搜索部分-->
           <div class="Search_Add" v-if="Data.Seach_ADDisShow">
-            <el-input v-model="Data.input" placeholder="搜索生产商" @keyup.enter="Fun.GoSearch()" />
-            <el-button class="My-Search-Btn" type="success" :icon="Search" @click="Fun.GoSearch()">搜索</el-button>
-            <slot name="Search_Add" />
+            <slot name="Search_Add_Before" />
+            <slot name="Search_Add_After" />
             <el-button class="My-Search-Btn" type="success" plain :icon="Bottom" @click="Fun.ExportXlsx()">导出</el-button>
           </div>
           <!--            TODO -->
@@ -66,7 +65,7 @@ interface User {
 const route = useRoute();
 const store = useStore();
 const props = defineProps(["tableData", "Seach_ADDisShow", "tableList", "AllPageSize"]);
-const emit = defineEmits(["ChangepageSize", "ChangeCurrentChange", "ChangeTableData"]);
+const emit = defineEmits(["ChangepageSize", "ChangeCurrentChange"]);
 const Data = reactive({
   MenuBarList: computed(() => store.state.MenuBar.MenuBarList),
   HomeHeaderIcon: "ChromeFilled",
@@ -182,10 +181,6 @@ const Fun = reactive({
         Data.FullScreenFlag = !Data.FullScreenFlag;
       }
     }
-  },
-  //  TODO 点击搜索
-  GoSearch() {
-    emit("ChangeTableData", Data.input);
   },
 });
 

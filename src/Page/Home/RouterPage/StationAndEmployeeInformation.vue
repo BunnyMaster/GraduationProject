@@ -5,7 +5,6 @@
     :AllPageSize="Data.AllPageSize"
     @ChangepageSize="Fun.ChangepageSize"
     @ChangeCurrentChange="Fun.ChangeCurrentChange"
-    @ChangeTableData="Fun.ChangeTableData"
   >
     <template #default>
       <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
@@ -90,10 +89,6 @@ const Fun = reactive({
     }
     return flag;
   },
-  //TODO 点击编辑
-  handleEdit(index, row) {},
-  // TODO 点击删除
-  handleDelete(index, row) {},
   //  TODO 获取工厂信息
   async GETStaff() {
     ElMessage.closeAll();
@@ -144,18 +139,6 @@ const Fun = reactive({
   ChangeCurrentChange(Val: any) {
     Data.pageSize = Val;
     Fun.GETStaff();
-  },
-  // TODO 改变数组ChangeTableData
-  ChangeTableData(Val: string) {
-    let list: string[] = [];
-    if (Val) {
-      tableData.value.forEach((Name: any) => {
-        if (Name.manufacturer.toString() === Val.toString()) list.push(Name);
-      });
-      tableData = computed(() => list);
-    } else {
-      tableData = computed(() => store.state.Workshop.WorkshopLsit);
-    }
   },
 });
 

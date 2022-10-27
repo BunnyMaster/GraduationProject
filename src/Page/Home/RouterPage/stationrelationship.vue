@@ -1,5 +1,12 @@
 <template>
-  <HomeTableCommon :tableData="tableData">
+  <HomeTableCommon
+    :tableList="tableList"
+    :tableData="tableData"
+    :AllPageSize="Data.AllPageSize"
+    @ChangepageSize="Fun.ChangepageSize"
+    @ChangeCurrentChange="Fun.ChangeCurrentChange"
+    @ChangeTableData="Fun.ChangeTableData"
+  >
     <template #default>
       <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
         <template #empty>
@@ -9,57 +16,46 @@
           </el-empty>
         </template>
         <!--   TODO --- 序号  -->
-        <el-table-column align="center" sortable prop="date" label="序号" width="auto" style="text-align: center">
+        <el-table-column align="center" sortable prop="id" label="序号" width="auto">
           <template #default="scope">
-            <div style="display: flex; justify-content: center; align-items: center">
-              <el-icon><timer /></el-icon>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
-            </div>
+            <span style="margin-left: 10px">{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
         <!--   TODO --- 工序名称  -->
-        <el-table-column align="center" prop="date" label="工序名称" width="auto" style="text-align: center">
+        <el-table-column align="center" prop="ProcessMaintenanceName" label="工序名称" width="auto">
           <template #default="scope">
-            <div style="display: flex; justify-content: center; align-items: center">
-              <el-icon><timer /></el-icon>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
-            </div>
+            <span>{{ scope.row.ProcessMaintenanceName }}</span>
           </template>
         </el-table-column>
         <!--      TODO 工站名称-->
-        <el-table-column align="center" prop="date" label="工站名称" width="auto" style="text-align: center" />
+        <el-table-column align="center" prop="ProcessMaintenanceSattionName" label="工站名称" width="auto" />
         <!--      TODO 产线名称-->
-        <el-table-column align="center" prop="date" label="产线名称" width="auto" style="text-align: center" />
-        <!--  TODO --- 操作   -->
-        <el-table-column align="center" label="操作" width="auto">
-          <template #default="scope">
-            <el-button size="small" @click="Fun.handleEdit(scope.$index, scope.row)"> 编辑 </el-button>
-            <el-button size="small" type="danger" @click="Fun.handleDelete(scope.$index, scope.row)"> 删除 </el-button>
-          </template>
-        </el-table-column>
+        <el-table-column align="center" prop="ProcessMaintenanceDetail" label="工艺详细信息" width="auto" />
       </el-table>
     </template>
   </HomeTableCommon>
 </template>
 <script setup lang="ts">
 import HomeTableCommon from "@/components/HomeTableCommon.vue";
-import { reactive } from "vue";
-import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
+import { computed, onMounted, reactive } from "vue";
+import { Timer, Discount } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
+import { ElMessage } from "element-plus";
 interface User {
   date: string;
   name: string;
   address: string;
   tag: string;
 }
+const store = useStore();
+const tableList = ["设备条码", "设备类型", "设备规格", "所属工站", "所属工位", "感应距离", "感应方式", "采购时间", "出厂编号", "用途", "所有权部门", "资产负责人"];
+var tableData = computed(() => store.state.ProcessMaintenanceANDFlowMaintenance.ProcessMaintenanceANDFlowMaintenanceLsit);
+const Data = reactive({
+  currentPage: 1, // 前往多少页
+  pageSize: 10, // 每页显示多少跳
+  AllPageSize: computed(() => store.state.ProcessMaintenanceANDFlowMaintenance.ProcessMaintenanceANDFlowMaintenanceCountPage),
+});
 const Fun = reactive({
-  // TODO
-  formatter(row: User, column: TableColumnCtx<User>) {
-    return row.address;
-  },
-  // TODO 过滤列表
-  filterTag(value: string, row: User) {
-    return row.tag === value;
-  },
   // TODO
   tableRowClassName({ row, rowIndex }: { row: User; rowIndex: number }) {
     if (rowIndex === 1) {
@@ -69,204 +65,43 @@ const Fun = reactive({
     }
     return "";
   },
-  //TODO 点击编辑
-  handleEdit(index, row) {},
-  // TODO 点击删除
-  handleDelete(index, row) {},
+  // TODO 获取企业列表
+  async GETProcessMaintenanceANDFlowMaintenance() {
+    ElMessage.closeAll();
+    try {
+      await store.dispatch("GETProcessMaintenanceANDFlowMaintenance", { index: Data.currentPage, pageSize: Data.pageSize });
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: `${e.messsage}`,
+        type: "error",
+        center: true,
+      });
+    }
+  },
+  //  TODO ChangeCurrentPage && pageSize
+  ChangepageSize(Val: any) {
+    Data.currentPage = Data.pageSize * (Val - 1);
+    Fun.GETProcessMaintenanceANDFlowMaintenance();
+  },
+  ChangeCurrentChange(Val: any) {
+    Data.pageSize = Val;
+    Fun.GETProcessMaintenanceANDFlowMaintenance();
+  },
+  // TODO 改变数组ChangeTableData
+  ChangeTableData(Val: string) {
+    let list: string[] = [];
+    if (Val) {
+      tableData.value.forEach((Name: any) => {
+        if (Name.manufacturer.toString() === Val.toString()) list.push(Name);
+      });
+      tableData = computed(() => list);
+    } else {
+      tableData = computed(() => store.state.Enterprise.countPage);
+    }
+  },
 });
-
-const tableData: User[] = [
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-02",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-    tag: "Office",
-  },
-];
+onMounted(() => {
+  Fun.GETProcessMaintenanceANDFlowMaintenance();
+});
 </script>

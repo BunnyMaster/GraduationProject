@@ -5,7 +5,6 @@
     :AllPageSize="Data.AllPageSize"
     @ChangepageSize="Fun.ChangepageSize"
     @ChangeCurrentChange="Fun.ChangeCurrentChange"
-    @ChangeTableData="Fun.ChangeTableData"
   >
     <template #default>
       <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
@@ -31,7 +30,7 @@
           </template>
         </el-table-column>
         <!--      TODO 上报人姓名-->
-        <el-table-column align="center" prop="Name" label="上报人姓名" width="auto" style="text-align: center" />
+        <el-table-column align="center" prop="Name" label="上报人姓名" width="188" style="text-align: center" />
         <!--   TODO --- 创建时间  -->
         <el-table-column align="center" sortable prop="Time" label="上报时间" width="266" style="text-align: center">
           <template #default="scope">
@@ -130,18 +129,6 @@ const Fun = reactive({
   ChangeCurrentChange(Val: any) {
     Data.pageSize = Val;
     Fun.GetRepairBill();
-  },
-  // TODO 改变数组ChangeTableData
-  ChangeTableData(Val: string) {
-    let list: string[] = [];
-    if (Val) {
-      tableData.value.forEach((Name: any) => {
-        if (Name.manufacturer.toString() === Val.toString()) list.push(Name);
-      });
-      tableData = computed(() => list);
-    } else {
-      tableData = computed(() => store.state.RepairCord.RepairCordLIst);
-    }
   },
 });
 

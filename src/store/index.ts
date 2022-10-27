@@ -11,10 +11,31 @@ import Enterprise from "@/store/APIFile/6 Enterprise";
 import Workshop from "@/store/APIFile/8 Workshop";
 import Staff from "@/store/APIFile/9 Staff";
 import RepairCord from "@/store/APIFile/10 RepairCord";
+import OrderManagement from "@/store/APIFile/11 OrderManagement";
+import ProcessMaintenanceANDFlowMaintenance from "@/store/APIFile/12 ProcessMaintenanceANDFlowMaintenance;";
+import Performance from "@/store/APIFile/13 Performance";
+import TodolistAll from "@/store/APIFile/14 TodoList";
 export default createStore({
   state: {},
   getters: {},
   mutations: {},
   actions: {},
-  modules: { MenuBar, EquipmentManagement, AndroidPAD, Login, ElectronicScale, BarcodePrinter, InfraredCounterGun, Factory, Enterprise, Workshop, Staff, RepairCord },
+  modules: {
+    MenuBar,
+    EquipmentManagement,
+    AndroidPAD,
+    Login,
+    ElectronicScale,
+    BarcodePrinter,
+    InfraredCounterGun,
+    Factory,
+    Enterprise,
+    Workshop,
+    Staff,
+    RepairCord,
+    OrderManagement,
+    ProcessMaintenanceANDFlowMaintenance,
+    Performance,
+    TodolistAll,
+  },
 });

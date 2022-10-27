@@ -5,7 +5,6 @@
     :AllPageSize="Data.AllPageSize"
     @ChangepageSize="Fun.ChangepageSize"
     @ChangeCurrentChange="Fun.ChangeCurrentChange"
-    @ChangeTableData="Fun.ChangeTableData"
   >
     <template #default>
       <el-table :data="tableData" style="width: 100%" stripe :row-class-name="Fun.tableRowClassName" :default-sort="{ prop: 'date', order: 'descending' }" max-height="650">
@@ -130,18 +129,6 @@ const Fun = reactive({
   ChangeCurrentChange(Val: any) {
     Data.pageSize = Val;
     Fun.GETWorkshop();
-  },
-  // TODO 改变数组ChangeTableData
-  ChangeTableData(Val: string) {
-    let list: string[] = [];
-    if (Val) {
-      tableData.value.forEach((Name: any) => {
-        if (Name.manufacturer.toString() === Val.toString()) list.push(Name);
-      });
-      tableData = computed(() => list);
-    } else {
-      tableData = computed(() => store.state.Workshop.WorkshopLsit);
-    }
   },
 });
 

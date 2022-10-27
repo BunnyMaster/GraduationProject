@@ -6,7 +6,7 @@ const WebpackBar = require("webpackbar");
 module.exports = defineConfig({
   transpileDependencies: true,
   // TODO 打包时使用
-  /* publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
+  /*  publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
   outputDir: "dist",
   indexPath: "index.html",*/
   lintOnSave: false,
@@ -14,12 +14,8 @@ module.exports = defineConfig({
     proxy: {
       // TODO 访问api链接时
       "/api": {
-        target: "http://localhost:6666", //这里填入你要请求的接口的前缀
+        target: "http://127.0.0.1:6666", //这里填入你要请求的接口的前缀
       },
-      "/prod-api": {
-        target: "http://www.029tec.com", //这里填入你要请求的接口的前缀
-      },
-      //}
     },
   },
   pluginOptions: {

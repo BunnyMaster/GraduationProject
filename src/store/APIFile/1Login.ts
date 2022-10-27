@@ -39,7 +39,7 @@ const Login = {
       if (result.code === 200) {
         commit("GETLOGININFO", result.data);
       } else {
-        Promise.reject(new Error("获取用户信息失败"));
+        return Promise.reject(new Error("获取用户信息失败"));
       }
     },
     //  TODO 获取维修单
@@ -48,7 +48,7 @@ const Login = {
       if (result.code === 200) {
         commit("GETREPAIRBILL", result);
       } else {
-        Promise.reject(new Error("获取维修单失败"));
+        return Promise.reject(new Error("获取维修单失败"));
       }
     },
     //   TODO 用户注册
@@ -57,7 +57,7 @@ const Login = {
       if (result.code === 200) {
         return result;
       } else {
-        Promise.reject(new Error("注册失败"));
+        return Promise.reject(new Error(`注册失败 ${result.message}`));
       }
     },
     //   TODO 用户登录
@@ -66,7 +66,7 @@ const Login = {
       if (result.code === 200) {
         commit("PSOTLOGIN", result);
       } else {
-        Promise.reject(new Error("登录失败"));
+        return Promise.reject(new Error("登录失败"));
       }
       return result;
     },

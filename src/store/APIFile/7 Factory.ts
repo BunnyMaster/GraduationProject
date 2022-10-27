@@ -20,7 +20,7 @@ const Factory = {
       if (result.code == 200) {
         commit("GETENTERPRISE", result);
       } else {
-        Promise.reject(new Error("获取企业列表失败"));
+        return Promise.reject(new Error("获取企业列表失败"));
       }
     },
   },

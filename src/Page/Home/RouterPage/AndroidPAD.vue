@@ -1,75 +1,4 @@
 <template>
-  <!--  对话框-->
-  <el-dialog v-model="dialogFormVisible" :title="`${$route.meta.title}`">
-    <el-form :model="form">
-      <h1 style="text-align: center; margin-bottom: 16px">请添请加</h1>
-      <!--          TODO 选择框中的设备列表-->
-      <el-form-item label="设备列表" :label-width="form.formLabelWidth">
-        <el-select v-model="form.name.specificationOfEquipment" placeholder="请选择设备">
-          <el-option v-for="(LabelItem, LableIndex) in form.MenuBarList.DevicTtype" :key="LableIndex" :label="LabelItem" :value="LabelItem" />
-        </el-select>
-      </el-form-item>
-      <!--      设备条码-->
-      <el-form-item label="设备条码" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.BarCodeEquipment" placeholder="请输入条码编号" style="width: 300px" />
-      </el-form-item>
-      <!--      设备规格-->
-      <el-form-item label="设备规格" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.DeviceType" placeholder="请输入设备规格" style="width: 300px" />
-      </el-form-item>
-      <!--      采购时间-->
-      <el-form-item label="采购时间" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.purchasingPeriod" placeholder="请输入采购时间" style="width: 300px" />
-      </el-form-item>
-      <!--      所属工站-->
-      <el-form-item label="所属工站" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.workStation" placeholder="请输入所属工站" style="width: 300px" />
-      </el-form-item>
-      <!--      所属工位-->
-      <el-form-item label="所属工位" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.SubordinateStation" placeholder="请输入所属工位" style="width: 300px" />
-      </el-form-item>
-      <!--      分辨率-->
-      <el-form-item label="分辨率" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.resolutionRatio" placeholder="请输入分辨率" style="width: 300px" />
-      </el-form-item>
-      <!--      核心数-->
-      <el-form-item label="核心数" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.coreNumber" placeholder="请输入核心数" style="width: 300px" />
-      </el-form-item>
-      <!--      内存-->
-      <el-form-item label="内存" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.memory" placeholder="请输入内存容量" style="width: 300px" />
-      </el-form-item>
-      <!--      电池容量-->
-      <el-form-item label="电池容量" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.batteryCapacity" placeholder="请输入电池容量" style="width: 300px" />
-      </el-form-item>
-      <!--      电池容量-->
-      <el-form-item label="生产商" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.supplier" placeholder="请输入生产商" style="width: 300px" />
-      </el-form-item>
-      <!--      电池容量-->
-      <el-form-item label="用途" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.manufacturer" placeholder="请输入用途" style="width: 300px" />
-      </el-form-item>
-      <!--      电池容量-->
-      <el-form-item label="资产负责人" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.PrincipalOfAssets" placeholder="请输入资产负责人" style="width: 300px" />
-      </el-form-item>
-      <!--      电池容量-->
-      <el-form-item label="所有权部门" :label-width="form.formLabelWidth">
-        <el-input v-model="form.name.DepartmentOfOwnership" placeholder="请输入所有权部门" style="width: 300px" />
-      </el-form-item>
-    </el-form>
-
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">返回</el-button>
-        <el-button type="primary" @click="Fun.SubmitName()">确认</el-button>
-      </span>
-    </template>
-  </el-dialog>
   <!--  项目名-->
   <HomeTableCommon
     :tableList="tableList"
@@ -77,7 +6,6 @@
     :AllPageSize="form.AllPageSize"
     @ChangepageSize="Fun.ChangepageSize"
     @ChangeCurrentChange="Fun.ChangeCurrentChange"
-    @ChangeTableData="Fun.ChangeTableData"
   >
     <template #default>
       <el-table
@@ -123,7 +51,10 @@
               <el-icon>
                 <timer />
               </el-icon>
-              <span style="margin-left: 10px">{{ scope.row.purchasingPeriod.replace("T", "\t").replace(".000Z", "") }}</span>
+              <span style="margin-left: 10px" v-if="scope.row.purchasingPeriod">{{
+                scope.row.purchasingPeriod.replace("T", "\t").replace(".000Z", "").replace(".000000", "")
+              }}</span>
+              <span style="margin-left: 10px; color: #f56c6c" v-else>暂无数据</span>
             </div>
           </template>
         </el-table-column>
@@ -203,17 +134,108 @@
             </el-tag>
           </template>
         </el-table-column>
+        <!--  TODO --- 操作   -->
+        <el-table-column align="center" fixed="right" label="操作" width="166">
+          <template #default="scope">
+            <el-popconfirm
+              title="确定要删除吗？"
+              confirm-button-text="删除"
+              cancel-button-text="不删除"
+              :icon="Delete"
+              icon-color="#F56C6C"
+              @confirm="Fun.handleDelete(scope.$index, scope.row)"
+              @cancel="Fun.cancel()"
+            >
+              <template #reference>
+                <el-button type="danger" plain :icon="Delete" size="large"> 删除 </el-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
       </el-table>
     </template>
-    <template #Search_Add>
+    <template #Search_Add_Before>
+      <el-input v-model="Search_Add.input" placeholder="搜索资产负责人" @keyup.enter="Search_Add.GoSearch" />
+      <el-button class="My-Search-Btn" type="success" :icon="Search" @click="Search_Add.GoSearch">搜索</el-button>
+    </template>
+    <template #Search_Add_After>
       <el-button class="My-Search-Btn" type="success" :icon="Plus" @click="Fun.AddItem((flag = true))">添加</el-button>
     </template>
   </HomeTableCommon>
+  <!--  对话框-->
+  <el-dialog v-model="dialogFormVisible" :title="`${$route.meta.title}`">
+    <el-form :model="form">
+      <h1 style="text-align: center; margin-bottom: 16px">请添请加</h1>
+      <!--          TODO 选择框中的设备列表-->
+      <el-form-item label="设备列表" :label-width="form.formLabelWidth">
+        <el-select v-model="form.name.specificationOfEquipment" placeholder="请选择设备">
+          <el-option v-for="(LabelItem, LableIndex) in form.MenuBarList.DevicTtype" :key="LableIndex" :label="LabelItem" :value="LabelItem" />
+        </el-select>
+      </el-form-item>
+      <!--      设备条码-->
+      <el-form-item label="设备条码" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.BarCodeEquipment" placeholder="请输入条码编号" style="width: 300px" />
+      </el-form-item>
+      <!--      设备规格-->
+      <el-form-item label="设备规格" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.DeviceType" placeholder="请输入设备规格" style="width: 300px" />
+      </el-form-item>
+      <!--      采购时间-->
+      <el-form-item label="采购时间" :label-width="form.formLabelWidth">
+        <div class="block" style="width: 300px">
+          <el-date-picker v-model="form.name.purchasingPeriod" type="datetime" placeholder="请选择日期与时间" />
+        </div>
+        <!--        <el-input v-model="form.name.purchasingPeriod" placeholder="请输入采购时间" style="width: 300px" />-->
+      </el-form-item>
+      <!--      所属工站-->
+      <el-form-item label="所属工站" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.workStation" placeholder="请输入所属工站" style="width: 300px" />
+      </el-form-item>
+      <!--      所属工位-->
+      <el-form-item label="所属工位" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.SubordinateStation" placeholder="请输入所属工位" style="width: 300px" />
+      </el-form-item>
+      <!--      分辨率-->
+      <el-form-item label="分辨率" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.resolutionRatio" placeholder="请输入分辨率" style="width: 300px" />
+      </el-form-item>
+      <!--      核心数-->
+      <el-form-item label="核心数" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.coreNumber" placeholder="请输入核心数" style="width: 300px" />
+      </el-form-item>
+      <!--      内存-->
+      <el-form-item label="内存" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.memory" placeholder="请输入内存容量" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="电池容量" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.batteryCapacity" placeholder="请输入电池容量" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="生产商" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.supplier" placeholder="请输入生产商" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="用途" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.manufacturer" placeholder="请输入用途" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="资产负责人" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.PrincipalOfAssets" placeholder="请输入资产负责人" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="所有权部门" :label-width="form.formLabelWidth">
+        <el-input v-model="form.name.DepartmentOfOwnership" placeholder="请输入所有权部门" style="width: 300px" />
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">返回</el-button>
+        <el-button type="primary" @click="Fun.SubmitName()">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import HomeTableCommon from "@/components/HomeTableCommon.vue";
 import { computed, nextTick, onMounted, reactive, ref } from "vue";
-import { Timer, Iphone, Plus } from "@element-plus/icons-vue";
+import { Timer, Iphone, Plus, Search, Delete } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import * as uuid from "uuid";
 import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
@@ -282,20 +304,20 @@ var dialogFormVisible = ref(false);
 const form = reactive({
   name: {
     id: uuid.v4(),
-    BarCodeEquipment: "AndroidPAD-b6523d8e",
-    specificationOfEquipment: "安卓PAD",
+    BarCodeEquipment: "",
+    specificationOfEquipment: "",
     purchasingPeriod: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-    DeviceType: "32+128",
-    workStation: "鱿鱼丝生产线",
-    SubordinateStation: "1号位",
-    resolutionRatio: "720*620",
-    coreNumber: "4",
-    batteryCapacity: "12000",
-    supplier: "华为",
-    memory: "32",
-    PrincipalOfAssets: "朱科维",
-    manufacturer: "北京奇创彩晶科技发展有限公司",
-    DepartmentOfOwnership: "技术部",
+    DeviceType: "",
+    workStation: "",
+    SubordinateStation: "",
+    resolutionRatio: "",
+    coreNumber: "",
+    batteryCapacity: "",
+    supplier: "",
+    memory: "",
+    PrincipalOfAssets: "",
+    manufacturer: "",
+    DepartmentOfOwnership: "",
   },
   delivery: false,
   formLabelWidth: "140px",
@@ -333,9 +355,36 @@ const Fun = reactive({
     return "";
   },
   //TODO 点击编辑
-  handleEdit() {},
+  cancel() {
+    ElMessage.closeAll();
+    ElMessage({
+      showClose: true,
+      message: `取消删除`,
+      type: "warning",
+      center: true,
+    });
+  },
   // TODO 点击删除
-  handleDelete() {},
+  async handleDelete(index: number, row: any) {
+    ElMessage.closeAll();
+    try {
+      let result = await store.dispatch("DelatwAndroidPAD", { id: row.id });
+      ElMessage({
+        showClose: true,
+        message: `${result}`,
+        type: "success",
+        center: true,
+      });
+      Fun.Refshash();
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: `${e.message}`,
+        type: "error",
+        center: true,
+      });
+    }
+  },
   //自动生成生产线名称
   MakeNUmberLine() {
     for (let i = 0; i <= 66; i++) {
@@ -359,8 +408,11 @@ const Fun = reactive({
   //  提交表单
   async SubmitName() {
     let data: any = form.name;
+    let change: string = dayjs(data.purchasingPeriod).format("YYYY-MM-DD HH:mm:ss");
+    data.purchasingPeriod = change;
     try {
       await store.dispatch("POSTAndroidPADAddItem", data);
+      Fun.Refshash();
       dialogFormVisible.value = false;
     } catch (e) {
       ElMessage.closeAll();
@@ -404,6 +456,21 @@ const Fun = reactive({
       form.tableData = computed(() => list);
     } else {
       form.tableData = computed(() => store.state.AndroidPAD.AllTableList);
+    }
+  },
+});
+
+const Search_Add = reactive({
+  input: "",
+  GoSearch() {
+    if (Search_Add.input !== "" && Search_Add.input !== undefined && Search_Add.input.trim()) {
+      store.dispatch("GETAndroidPADSearch", {
+        index: form.currentPage,
+        pageSize: form.pageSize,
+        keyword: Search_Add.input.trim(),
+      });
+    } else {
+      Fun.Refshash();
     }
   },
 });

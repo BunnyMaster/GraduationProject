@@ -53,9 +53,7 @@
         <div class="headImg">
           <el-avatar :size="100" :src="HeaderData.UserInfoLIst.HeaderImage" @error="errorHandler">
             <img src="./images/header-default.jpg" />
-            <!--            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />-->
           </el-avatar>
-          <!--          <img src="./images/header-default.jpg" alt="用户头像" />-->
         </div>
         <!-- 用户名 -->
         <div class="UserName">
@@ -63,8 +61,8 @@
         </div>
         <!-- 登录和退出登录 -->
         <div class="Login-Loginout">
-          <a href="JavaScript:;" @click="HeaderFun.LoginOut()">点击退出</a>
-          <router-link to="/login">重新注册</router-link>
+          <a href="JavaScript:;" @click="HeaderFun.LoginOut()">重新注册</a>
+          <router-link to="/login">修改信息</router-link>
         </div>
       </div>
       <el-tooltip class="box-item" effect="dark" :content="HeaderData.FullScreenFlag ? '全屏显示' : '退出全屏'" placement="bottom">
@@ -92,7 +90,7 @@ var NowTimeDay: number = dayjs(new Date()).format("YYYY-MM-DD d HH:mm:ss").split
 const errorHandler = () => true;
 const HeaderData = reactive({
   NowTime: dayjs(new Date()).format(`YYYY年MM月DD号 ${NowTimeDay} HH:mm:ss`),
-  IconFlag: true,
+  IconFlag: false,
   FullScreenFlag: true,
   HeaderTitle: "主题",
   UserInfoLIst: computed(() => store.state.Login.UserInfo || [{}]),

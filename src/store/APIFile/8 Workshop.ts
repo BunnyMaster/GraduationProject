@@ -20,7 +20,7 @@ const Workshop = {
       if (result.code == 200) {
         commit("GETREQWORKSHOP", result);
       } else {
-        Promise.reject(new Error("获取列表失败-CODE 1"));
+        return Promise.reject(new Error("获取列表失败-CODE 1"));
       }
     },
   },

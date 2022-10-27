@@ -2,7 +2,7 @@
 import { reqDeviceFaultReporting, reqMenuBarList } from "@/api/requestApi.js";
 const MenuBar = {
   state: {
-    isCollapse: true,
+    isCollapse: false,
     MenuBarList: [{}],
     DevicTtype: [{}],
   },

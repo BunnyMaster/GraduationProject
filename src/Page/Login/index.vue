@@ -95,6 +95,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import login from "@/store/APIFile/1Login";
 import { ElMessage } from "element-plus";
+import { result } from "lodash";
 const out: HTMLDivElement = ref(null);
 const router = useRouter();
 const store = useStore();
@@ -124,7 +125,7 @@ const LoginData = reactive({
   LoginPwd: "",
   LoginPwdInfo: false,
   LoginPwdDisable: false,
-  LoginDisable: true,
+  LoginDisable: false,
 });
 
 const LoginFun = reactive({
@@ -164,11 +165,12 @@ const LoginFun = reactive({
       UserPwd1,
     };
     if (UserName && UserPwd1 && UserPwd2) {
+      ElMessage.closeAll();
       try {
         let result = await store.dispatch("PostRegister", data);
         ElMessage({
           showClose: true,
-          message: `注册成功 ${result.code}`,
+          message: `注册成功}`,
           type: "success",
           center: true,
         });
@@ -176,7 +178,7 @@ const LoginFun = reactive({
       } catch (e) {
         ElMessage({
           showClose: true,
-          message: `注册失败 ${e.message}`,
+          message: `${e.message}`,
           type: "error",
           center: true,
         });
@@ -190,7 +192,7 @@ const LoginFun = reactive({
       let result = await store.dispatch("PostLogin", Login);
       ElMessage({
         showClose: true,
-        message: `登录成功 ${result.code}`,
+        message: `登录成功`,
         type: "success",
         center: true,
       });
@@ -363,7 +365,7 @@ html,
     height: 550px;
     border-radius: 50px;
     overflow: hidden;
-    background-image: url(./images/login.webp);
+    background-image: url(./images/login.png);
 
     // 上面
     .top {

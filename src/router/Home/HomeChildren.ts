@@ -16,6 +16,13 @@ const homeChildren = [
     component: () => import("@/Page/Home/RouterPage/calendar.vue"),
     meta: { title: "日历" },
   },
+
+  //日历
+  {
+    path: "/home/main/todolist",
+    component: () => import("@/Page/Home/RouterPage/TodoList.vue"),
+    meta: { title: "计划表" },
+  },
   //安卓PAD
   {
     path: "/home/main/AndroidPAD",
@@ -89,42 +96,6 @@ const homeChildren = [
     component: () => import("@/Page/Home/RouterPage/StationAndEmployeeInformation.vue"),
     meta: { title: "工位与员工信息" },
   },
-  //原料库存清单
-  {
-    path: "/home/main/RawMaterialInventoryList",
-    component: () => import("@/Page/Home/RouterPage/RawMaterialInventoryList.vue"),
-    meta: { title: "原料库存清单" },
-  },
-  //原料库存清单
-  {
-    path: "/home/main/RawMaterialInventoryList",
-    component: () => import("@/Page/Home/RouterPage/RawMaterialInventoryList.vue"),
-    meta: { title: "原料库存清单" },
-  },
-  //产品
-  {
-    path: "/home/main/product",
-    component: () => import("@/Page/Home/RouterPage/product.vue"),
-    meta: { title: "产品" },
-  },
-  //BOM物料
-  {
-    path: "/home/main/BOMMaterial",
-    component: () => import("@/Page/Home/RouterPage/BOMMaterial.vue"),
-    meta: { title: "BOM物料" },
-  },
-  //BOM物料详情
-  {
-    path: "/home/main/BOMMaterialDetails",
-    component: () => import("@/Page/Home/RouterPage/BOMMaterialDetails.vue"),
-    meta: { title: "BOM物料详情" },
-  },
-  //BOM物料详情
-  {
-    path: "/home/main/BOMMaterialDetails",
-    component: () => import("@/Page/Home/RouterPage/BOMMaterialDetails.vue"),
-    meta: { title: "BOM物料详情" },
-  },
   //绩效报表
   {
     path: "/home/main/PerformanceManagement",
@@ -196,30 +167,6 @@ const homeChildren = [
     path: "/home/main/stationrelationship",
     component: () => import("@/Page/Home/RouterPage/stationrelationship.vue"),
     meta: { title: "工序与工站关系" },
-  },
-  //违规管理
-  {
-    path: "/home/main/BadManagement",
-    component: () => import("@/Page/Home/RouterPage/BadManagement.vue"),
-    meta: { title: "违规管理" },
-  },
-  //残次品上报管理
-  {
-    path: "/home/main/DefectiveProducts",
-    component: () => import("@/Page/Home/RouterPage/DefectiveProducts.vue"),
-    meta: { title: "残次品上报管理" },
-  },
-  //异常工序检测
-  {
-    path: "/home/main/AbnormalProcessDetection",
-    component: () => import("@/Page/Home/RouterPage/AbnormalProcessDetection.vue"),
-    meta: { title: "异常工序检测" },
-  },
-  //切片质量检测
-  {
-    path: "/home/main/SectionQualityInspection",
-    component: () => import("@/Page/Home/RouterPage/SectionQualityInspection.vue"),
-    meta: { title: "切片质量检测" },
   },
   //设备台账
   {

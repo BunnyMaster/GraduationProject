@@ -8,6 +8,10 @@
         "Link": "/system"
       },
       {
+        "Name": "计划表",
+        "Link":"/home/main/todolist"
+      },
+      {
         "Name": "系统日历",
         "Link": "/home/main/calendar"
       }
@@ -78,29 +82,6 @@
   },
   {
     "id": 4,
-    "title": "BOM基础资料",
-    "Menu": [
-      {
-        "Name": "原料库存清单",
-        "Link": "/home/main/RawMaterialInventoryList"
-      },
-      {
-        "Name": "产品",
-        "Link": "/home/main/product"
-      },
-      {
-        "Name": "BOM物料",
-        "Link": "/home/main/BOMMaterial"
-      },
-      {
-        "Name": "BOM物料详情",
-        "Link": "/home/main/BOMMaterialDetails"
-      }
-    ],
-    "Icon": "Files"
-  },
-  {
-    "id": 5,
     "title": "绩效管理",
     "Menu": [
       {
@@ -119,7 +100,7 @@
     "Icon": "Management"
   },
   {
-    "id": 6,
+    "id": 5,
     "title": "生产管理",
     "MenuList": [
       {
@@ -147,10 +128,10 @@
         ]
       }
     ],
-    "Icon": "Management"
+    "Icon": "DataLine"
   },
   {
-    "id": 7,
+    "id": 6,
     "title": "工艺管理",
     "Menu": [
       {
@@ -173,30 +154,7 @@
     "Icon": "SuitcaseLine"
   },
   {
-    "id": 8,
-    "title": "质量管理",
-    "Menu": [
-      {
-        "Name": "违规管理",
-        "Link": "/home/main/BadManagement"
-      },
-      {
-        "Name": "残次品上报管理",
-        "Link": "/home/main/DefectiveProducts"
-      },
-      {
-        "Name": "异常工序检测",
-        "Link": "/home/main/AbnormalProcessDetection"
-      },
-      {
-        "Name": "切片质量检测",
-        "Link": "/home/main/SectionQualityInspection"
-      }
-    ],
-    "Icon": "WarnTriangleFilled"
-  },
-  {
-    "id": 9,
+    "id": 7,
     "title": "设备管理",
     "Menu": [
       {
