@@ -675,6 +675,9 @@ Router.post("/ADDequipmentledger", (request: any, response: any) => {
 Router.get("/GETequipmentledger", (request: any, response: any) => {
   let query = request.query;
   let statement = `SELECT g.*,r.CountNum FROM graduation.equipmentledger g join (select count(*) as CountNum from graduation.equipmentledger) r limit ${query.index},${query.pageSize};`;
+  if (query.index === "1" || query.index === 1) {
+    statement = `SELECT g.*,r.CountNum FROM graduation.equipmentledger g join (select count(*) as CountNum from graduation.equipmentledger) r limit ${query.index - 1},${query.pageSize};`;
+  }
   MySQL.query(statement, (error: any, result: any) => {
     if (error) {
       let data: object = {
@@ -697,9 +700,104 @@ Router.get("/GETequipmentledger", (request: any, response: any) => {
   });
 });
 
-Router.post("/test", (request: any, response: any) => {
+// TODO --搜索人名EquipmentLedgerSearch全部--
+Router.post("/EquipmentLedgerSearch", (request: any, response: any, next: any) => {
   let data = request.body;
-  response.send(data);
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  // 分页
+  let statement1 = `select * from graduation.equipmentledger where SubPerson like'%${data.keyword}%' limit ${data.index},${data.pageSize};`;
+  if (data.index === "1" || data.index === 1) {
+    statement1 = `select * from graduation.equipmentledger where SubPerson like'%${data.keyword}%' limit ${data.index - 1},${data.pageSize};`;
+  }
+  // 多少条
+  let statement2 = `select count(*) as CountNum from graduation.equipmentledger where SubPerson like'%${data.keyword}%';`;
+
+  MySQL.query(statement1, (error1: any, result: any) => {
+    MySQL.query(statement2, (error2: any, CountNum: any) => {
+      if (error1 || error2) {
+        console.log("GET /api/equipment/EquipmentLedgerSearch---错误");
+        response.send(error1, error2);
+      } else {
+        if (result[0]) {
+          let data = {
+            code: 200,
+            message: "请求数据成功",
+            data: result,
+            pageSize: CountNum[0].CountNum,
+          };
+          response.send(data);
+          console.log("GET /api/equipment/EquipmentLedgerSearch---成功");
+        } else {
+          let data = {
+            code: 200,
+            message: "请求数据成功",
+            data: result,
+            pageSize: 0,
+          };
+          response.send(data);
+          console.log("GET /api/equipment/EquipmentLedgerSearch---成功");
+        }
+      }
+    });
+  });
+});
+
+// TODO 删除Performance数据
+Router.post("/EquipmentLedgerDelete", (request: any, response: any, next: any) => {
+  let query = request.query;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  console.log(query);
+  let statement = `delete from graduation.equipmentledger where id='${query.id}'`;
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/EquipmentLedgerDelete---错误");
+      response.send(error);
+    } else {
+      let data = {
+        code: 200,
+        message: "请求数据成功",
+        data: "",
+      };
+      response.send(data);
+      console.log("GET /api/equipment/EquipmentLedgerDelete---成功");
+    }
+  });
+});
+
+// TODO 添加指定内容
+Router.post("/EquipmentLedgerAddItem", (request: any, response: any, next: any) => {
+  let data: any = request.body;
+  let startkey = "";
+  let startvalue = "";
+
+  for (let i in request.body) {
+    startkey += i + ",";
+    startvalue += `'${request.body[i]}',`;
+  }
+  startkey = startkey.slice(0, startkey.lastIndexOf(","));
+  startvalue = startvalue.slice(0, startvalue.lastIndexOf(","));
+  let statement = `INSERT INTO graduation.equipmentledger ( ${startkey}) VALUES (${startvalue});`;
+  MySQL.query(statement, (Error: any, result: any) => {
+    if (Error) {
+      const data = {
+        code: -1,
+        message: "失败",
+        data: Error,
+      };
+      response.send(data);
+      console.log("POST /api/equipment/EquipmentLedgerAddItem---错误");
+    } else {
+      const data = {
+        code: 200,
+        message: "添加数据成功",
+        data: { msg: "添加数据成功" },
+      };
+      response.send(data);
+      console.log("POST /api/equipment/EquipmentLedgerAddItem---成功");
+    }
+  });
 });
 
 module.exports = Router;

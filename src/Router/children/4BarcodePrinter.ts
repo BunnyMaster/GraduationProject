@@ -321,7 +321,10 @@ Router.post("/BarcodePrinter", (request: any, response: any) => {
 // TODO 获取数据
 Router.get("/BarcodePrinter", (request: any, response: any) => {
   let query: any = request.query;
-  let statement = `select e.*,t.countNum from graduation.electronicscale e join (select count(*) as countNum from graduation.electronicscale) t limit ${query.index},${query.pageSize};`;
+  let statement = `select e.*,t.countNum from graduation.barcodeprinter e join (select count(*) as countNum from graduation.barcodeprinter) t limit ${query.index},${query.pageSize};`;
+  if (query.index === "1" || query.index === 1) {
+    statement = `select e.*,t.countNum from graduation.barcodeprinter e join (select count(*) as countNum from graduation.barcodeprinter) t limit ${query.index - 1},${query.pageSize};`;
+  }
   MySQL.query(statement, (error: any, result: any) => {
     if (error) {
       const data = {
@@ -342,4 +345,99 @@ Router.get("/BarcodePrinter", (request: any, response: any) => {
     }
   });
 });
+
+// TODO 添加指定内容
+Router.post("/BarcodePrinterAddItem", (request: any, response: any, next: any) => {
+  let data: any = request.body;
+  let startkey = "";
+  let startvalue = "";
+
+  for (let i in request.body) {
+    startkey += i + ",";
+    startvalue += `'${request.body[i]}',`;
+  }
+  startkey = startkey.slice(0, startkey.lastIndexOf(","));
+  startvalue = startvalue.slice(0, startvalue.lastIndexOf(","));
+  let statement = `INSERT INTO graduation.barcodeprinter ( ${startkey}) VALUES (${startvalue});`;
+  MySQL.query(statement, (Error: any, result: any) => {
+    if (Error) {
+      const data = {
+        code: -1,
+        message: "失败",
+        data: Error,
+      };
+      response.send(data);
+      console.log("POST /api/equipment/BarcodePrinterAddItem---错误");
+    } else {
+      const data = {
+        code: 200,
+        message: "添加数据成功",
+        data: { msg: "添加数据成功" },
+      };
+      response.send(data);
+      console.log("POST /api/equipment/BarcodePrinterAddItem---成功");
+    }
+  });
+});
+
+// TODO 搜索人名barcodeprinter全部 访问 BarcodePrinter 时发送请求,next---是中间件
+Router.post("/BarcodePrinterSearch", (request: any, response: any, next: any) => {
+  let data = request.body;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  let statement = `SELECT *,a.countNum FROM graduation.barcodeprinter g join (select count(*) as countNum from graduation.barcodeprinter where PrincipalOfAssets like'%${data.keyword}%') a where g.PrincipalOfAssets like '%${data.keyword}%' limit ${data.index},${data.pageSize};`;
+  if (data.index === "1" || data.index === 1) {
+    statement = `SELECT *,a.countNum FROM graduation.barcodeprinter g join (select count(*) as countNum from graduation.barcodeprinter where PrincipalOfAssets like'%${data.keyword}%') a where g.PrincipalOfAssets like '%${data.keyword}%' limit ${data.index - 1},${data.pageSize};`;
+  }
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/BarcodePrinterSearch---错误");
+      response.send(error);
+    } else {
+      if (result[0]) {
+        let data = {
+          code: 200,
+          message: "请求数据成功",
+          data: result,
+          AllPage: result[0].allPage,
+        };
+        response.send(data);
+        console.log("GET /api/equipment/BarcodePrinterSearch---成功");
+      } else {
+        let data = {
+          code: 200,
+          message: "请求数据成功",
+          data: result,
+          AllPage: 0,
+        };
+        response.send(data);
+        console.log("GET /api/equipment/BarcodePrinterSearch---成功");
+      }
+    }
+  });
+});
+
+// TODO 删除barcodeprinter数据
+Router.post("/BarcodePrinterDelete", (request: any, response: any, next: any) => {
+  let query = request.query;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  console.log(query);
+  let statement = `delete from graduation.barcodeprinter where id='${query.id}'`;
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/BarcodePrinterDelete---错误");
+      response.send(error);
+    } else {
+      let data = {
+        code: 200,
+        message: "请求数据成功",
+        data: "",
+      };
+      response.send(data);
+      console.log("GET /api/equipment/BarcodePrinterDelete---成功");
+    }
+  });
+});
+
 module.exports = Router;

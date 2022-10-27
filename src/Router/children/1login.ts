@@ -33,19 +33,31 @@ Router.post("/register", (request: any, response: any) => {
   }
   var register = new RandomItemMakeLine();
   let query = request.query;
-  MySQL.query(`INSERT INTO graduation.login (id, UserName, UserPwd, CreateTime, Name,HeaderImage) VALUES ('${register.num}','${query.UserName}','${query.UserPwd1}','${register.time}','${register.PeopleClass()}','${register.HeaderImages()}');`, (error: any, result: any) => {
-    if (error) {
-      let data: object = {
-        code: -1,
-        message: "注册失败",
-        data: error,
-      };
-      console.log("POST /api/equipment/Login---失败");
-      response.send(data);
+  MySQL.query(`Select * from graduation.login where UserName='${query.UserName}'`, (error1: any, result2: any) => {
+    if (result2.length === 0) {
+      MySQL.query(`INSERT INTO graduation.login (id, UserName, UserPwd, CreateTime, Name,HeaderImage) VALUES ('${register.num}','${query.UserName}','${query.UserPwd1}','${register.time}','${register.PeopleClass()}','${register.HeaderImages()}');`, (error: any, result: any) => {
+        if (error) {
+          let data: object = {
+            code: -1,
+            message: "注册失败",
+            data: error,
+          };
+          console.log("POST /api/equipment/Login---失败");
+          response.send(data);
+        } else {
+          let data: object = {
+            code: 200,
+            message: "注册成功",
+            data: [],
+          };
+          console.log("POST /api/equipment/Login---成功");
+          response.send(data);
+        }
+      });
     } else {
       let data: object = {
-        code: 200,
-        message: "注册成功",
+        code: 201,
+        message: "此用户已存在",
         data: [],
       };
       console.log("POST /api/equipment/Login---成功");

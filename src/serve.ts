@@ -1,3 +1,4 @@
+var colors = require("colors-console");
 const express = require("express");
 var app = express();
 
@@ -13,7 +14,7 @@ userRouter.forEach((routerItem: any) => app.use("/api/equipment", routerItem));
 
 // TODO 监听端口6666的数据内容
 app.listen(6666, () => {
-  console.log("6666监听中......,http://127.0.0.1:6666/");
+  console.log(`${colors("reverse", "6666端口")}\t${colors("reverse", "根路径-->http://127.0.0.1:6666/")}`);
 });
 
 module.exports = app;

@@ -15,8 +15,11 @@ Router.get("/AndroidPAD", (request: any, response: any, next: any) => {
   // 设置请求头
   response.setHeader("Access-Control-Allow-Origin", "*");
   num = uuid.v4();
-
-  MYSQL.query(` SELECT *,a.allPage FROM graduation.androidpad g join (select count(*) as allPage from graduation.androidpad) a  limit ${data.index},${data.count};`, (error: any, result: any) => {
+  let statement = `SELECT *,a.allPage FROM graduation.androidpad g join (select count(*) as allPage from graduation.androidpad) a  limit ${data.index},${data.count};`;
+  if (data.index === "1" || data.index === 1) {
+    statement = `SELECT *,a.allPage FROM graduation.androidpad g join (select count(*) as allPage from graduation.androidpad) a  limit ${data.index - 1},${data.count};`;
+  }
+  MYSQL.query(statement, (error: any, result: any) => {
     const data = {
       code: 200,
       message: "请求安卓PAD数据成功",
@@ -25,14 +28,14 @@ Router.get("/AndroidPAD", (request: any, response: any, next: any) => {
     };
     response.send(data);
     if (error) {
-      console.log("\n GET /api/equipment/AndroidPAD---错误");
+      console.log("GET /api/equipment/AndroidPAD---错误");
     } else {
-      console.log("\n GET /api/equipment/AndroidPAD---成功");
+      console.log("GET /api/equipment/AndroidPAD---成功");
     }
   });
 });
 
-// TODO POST请求-随机添加
+// TODO POST请求-随机添加************************************
 Router.post("/AndroidPAD", (request: any, response: any, next: any) => {
   class RandomItemMakeLine {
     num = uuid.v4();
@@ -318,7 +321,7 @@ Router.post("/AndroidPAD", (request: any, response: any, next: any) => {
           data: Error,
         };
         response.send(data);
-        console.log("\n GET /api/equipment/AndroidPAD---错误");
+        console.log("GET /api/equipment/AndroidPAD---错误");
       } else {
         const data = {
           code: 200,
@@ -326,7 +329,7 @@ Router.post("/AndroidPAD", (request: any, response: any, next: any) => {
           data: { msg: "添加数据成功", countent: body },
         };
         response.send(data);
-        console.log("\n GET /api/equipment/AndroidPAD---成功");
+        console.log("GET /api/equipment/AndroidPAD---成功");
       }
     },
   );
@@ -365,7 +368,7 @@ Router.post("/AndroidPADAddItem", (request: any, response: any, next: any) => {
           data: Error,
         };
         response.send(data);
-        console.log("\n POST /api/equipment/AndroidPAD---错误");
+        console.log("POST /api/equipment/AndroidPADAddItem---错误");
       } else {
         const data = {
           code: 200,
@@ -373,16 +376,73 @@ Router.post("/AndroidPADAddItem", (request: any, response: any, next: any) => {
           data: { msg: "添加数据成功" },
         };
         response.send(data);
-        console.log("\n POST /api/equipment/AndroidPAD---成功");
+        console.log("POST /api/equipment/AndroidPADAddItem---成功");
       }
     },
   );
 });
 
-// TODO 更改数据库
-Router.post("/AndroidPADChangeItem", (request: any, response: any, next: any) => {
-  let statement: string = `UPDATE graduation.androidpad SET "supplier" = '苹果' WHERE (id_index = '1') and (id = 'b6523d8e-e9ad-4b1c-8422-eedbcae4e666');`;
+// TODO 搜索人名androidpad全部 访问 AndroidPAD 时发送请求,next---是中间件
+Router.post("/AndroidPADSearch", (request: any, response: any, next: any) => {
+  let data = request.body;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  num = uuid.v4();
+  let statement = `SELECT *,a.allPage FROM graduation.androidpad g join (select count(*) as allPage from graduation.androidpad where PrincipalOfAssets like'%${data.keyword}%') a where g.PrincipalOfAssets like '%${data.keyword}%' limit ${data.index},${data.pageSize};`;
+  if (data.index === "1" || data.index === 1) {
+    statement = `SELECT *,a.allPage FROM graduation.androidpad g join (select count(*) as allPage from graduation.androidpad where PrincipalOfAssets like'%${data.keyword}%') a where g.PrincipalOfAssets like '%${data.keyword}%' limit ${data.index - 1},${data.pageSize};`;
+  }
+  MYSQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/AndroidPADSearch---错误");
+      response.send(error);
+    } else {
+      if (result[0]) {
+        let data = {
+          code: 200,
+          message: "请求安卓PAD数据成功",
+          data: result,
+          AllPage: result[0].allPage,
+        };
+
+        response.send(data);
+        console.log("GET /api/equipment/AndroidPADSearch---成功");
+      } else {
+        let data = {
+          code: 200,
+          message: "请求安卓PAD数据成功",
+          data: result,
+          AllPage: 0,
+        };
+        response.send(data);
+        console.log("GET /api/equipment/AndroidPADSearch---成功");
+      }
+    }
+  });
 });
+
+// TODO 删除androidpad数据
+Router.post("/AndroidPADDelete", (request: any, response: any, next: any) => {
+  let query = request.query;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  let statement = `delete from graduation.androidpad where id='${query.id}'`;
+  MYSQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/AndroidPADDelete---错误");
+      response.send(error);
+    } else {
+      let data = {
+        code: 200,
+        message: "请求安卓PAD数据成功",
+        data: "",
+      };
+      response.send(data);
+      console.log("GET /api/equipment/AndroidPADDelete---成功");
+    }
+  });
+});
+
 // TODO 泛型
 /*function FUN<T>(s: T): T {
   return s;

@@ -320,12 +320,17 @@ VALUES
 Router.get("/InfraredCounterGun", (request: any, response: any) => {
   let query: any = request.query;
   let statement = `select e.*,t.countNum from graduation.infraredcountergun e join (select count(*) as countNum from graduation.infraredcountergun) t limit ${query.index},${query.pageSize};`;
+  if (query.index === "1" || query.index === 1) {
+    statement = `select e.*,t.countNum from graduation.infraredcountergun e join (select count(*) as countNum from graduation.infraredcountergun) t limit ${query.index - 1},${query.pageSize};`;
+  }
+
   MySQL.query(statement, (error: any, result: any) => {
     if (error) {
       const data = {
         code: -1,
         message: "失败",
         data: error,
+        AllPage: 0,
       };
       response.send(data);
       console.log("GET /api/equipment/InfraredCounterGun---错误");
@@ -334,10 +339,107 @@ Router.get("/InfraredCounterGun", (request: any, response: any) => {
         code: 200,
         message: "获取成功",
         data: result,
+        AllPage: result[0].countNum,
       };
       response.send(data);
       console.log("GET /api/equipment/InfraredCounterGun---成功");
     }
   });
 });
+
+// TODO 添加指定内容
+Router.post("/InfraredCounterGunAddItem", (request: any, response: any, next: any) => {
+  let data: any = request.body;
+  let startkey = "";
+  let startvalue = "";
+
+  for (let i in request.body) {
+    startkey += i + ",";
+    startvalue += `'${request.body[i]}',`;
+  }
+  startkey = startkey.slice(0, startkey.lastIndexOf(","));
+  startvalue = startvalue.slice(0, startvalue.lastIndexOf(","));
+  let statement = `INSERT INTO graduation.infraredcountergun ( ${startkey}) VALUES (${startvalue});`;
+  MySQL.query(statement, (Error: any, result: any) => {
+    if (Error) {
+      const data = {
+        code: -1,
+        message: "失败",
+        data: Error,
+      };
+      response.send(data);
+      console.log("POST /api/equipment/InfraredCounterGunAddItem---错误");
+    } else {
+      const data = {
+        code: 200,
+        message: "添加数据成功",
+        data: { msg: "添加数据成功" },
+      };
+      response.send(data);
+      console.log("POST /api/equipment/InfraredCounterGunAddItem---成功");
+    }
+  });
+});
+
+// TODO 搜索人名infraredcountergun全部 访问 InfraredCounterGun 时发送请求,next---是中间件
+Router.post("/InfraredCounterGunSearch", (request: any, response: any, next: any) => {
+  let data = request.body;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  let statement = `SELECT *,a.countNum FROM graduation.infraredcountergun g join (select count(*) as countNum from graduation.infraredcountergun where PrincipalOfAssets like'%${data.keyword}%') a where g.PrincipalOfAssets like '%${data.keyword}%' limit ${data.index},${data.pageSize};`;
+  if (data.index === "1" || data.index === 1) {
+    statement = `SELECT *,a.countNum FROM graduation.infraredcountergun g join (select count(*) as countNum from graduation.infraredcountergun where PrincipalOfAssets like'%${data.keyword}%') a where g.PrincipalOfAssets like '%${data.keyword}%' limit ${data.index - 1},${
+      data.pageSize
+    };`;
+  }
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/InfraredCounterGunSearch---错误");
+      response.send(error);
+    } else {
+      if (result[0]) {
+        let data = {
+          code: 200,
+          message: "请求数据成功",
+          data: result,
+          AllPage: result[0].countNum,
+        };
+        response.send(data);
+        console.log("GET /api/equipment/InfraredCounterGunSearch---成功");
+      } else {
+        let data = {
+          code: 200,
+          message: "请求数据成功",
+          data: result,
+          AllPage: 0,
+        };
+        response.send(data);
+        console.log("GET /api/equipment/InfraredCounterGunSearch---成功");
+      }
+    }
+  });
+});
+
+// TODO 删除infraredcountergun数据
+Router.post("/InfraredCounterGunDelete", (request: any, response: any, next: any) => {
+  let query = request.query;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  let statement = `delete from graduation.infraredcountergun where id='${query.id}'`;
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      console.log("GET /api/equipment/InfraredCounterGunDelete---错误");
+      response.send(error);
+    } else {
+      let data = {
+        code: 200,
+        message: "请求数据成功",
+        data: "",
+      };
+      response.send(data);
+      console.log("GET /api/equipment/InfraredCounterGunDelete---成功");
+    }
+  });
+});
+
 module.exports = Router;

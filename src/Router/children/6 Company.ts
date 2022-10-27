@@ -5,6 +5,8 @@ var uuid = require("uuid");
 var Mock = require("mockjs");
 var Random = Mock.Random;
 
+//-------------------------------------------企业----------------------------------------------------
+
 // TODO 随机 添加数据
 Router.post("/Company", (request: any, response: any) => {
   class RandomItemMakeLine {
@@ -378,6 +380,10 @@ Router.post("/Company", (request: any, response: any) => {
 Router.get("/Company", (request: any, response: any) => {
   let query: any = request.query;
   let statement1 = `select e.*,t.countNum from graduation.enterprise e join (select count(*) as countNum from graduation.enterprise) t limit ${query.index},${query.pageSize};`;
+  if (query.index === "1" || query.index === 1) {
+    statement1 = `select e.*,t.countNum from graduation.enterprise e join (select count(*) as countNum from graduation.enterprise) t limit ${query.index - 1},${query.pageSize};`;
+  }
+
   let statement2 = `select * from graduation.enterprise `;
   if (query.index) {
     MySQL.query(statement1, (error: any, result: any) => {
@@ -421,6 +427,111 @@ Router.get("/Company", (request: any, response: any) => {
     });
   }
 });
+
+// TODO 搜索  ---Corp 法人
+Router.post("/CompanySearch", (request: any, response: any, next: any) => {
+  let data = request.body;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  // 分页
+  let statement1 = `select * from graduation.enterprise where Corp like '%${data.keyword}%' limit ${data.index},${data.pageSize};`;
+  if (data.index === "1" || data.index === 1) {
+    statement1 = `select * from graduation.enterprise where Corp like '%${data.keyword}%' limit ${data.index - 1},${data.pageSize};`;
+  }
+  // 多少条
+  let statement2 = `select count(*) as CountNum from graduation.enterprise where Corp like'%${data.keyword}%';`;
+
+  MySQL.query(statement1, (error1: any, result: any) => {
+    MySQL.query(statement2, (error2: any, CountNum: any) => {
+      if (error1 || error2) {
+        console.log("POST /api/equipment/CompanySearch---错误");
+        response.send(error1, error2);
+      } else {
+        if (result[0]) {
+          let data = {
+            code: 200,
+            message: "请求数据成功",
+            data: result,
+            countPage: CountNum[0].CountNum,
+          };
+          response.send(data);
+          console.log("POST /api/equipment/CompanySearch---成功");
+        } else {
+          let data = {
+            code: 200,
+            message: "请求数据成功",
+            data: result,
+            countPage: 0,
+          };
+          response.send(data);
+          console.log("POST /api/equipment/CompanySearch---成功");
+        }
+      }
+    });
+  });
+});
+
+// TODO 删除
+Router.post("/DeleteCompany", (request: any, response: any) => {
+  let query = request.body;
+  let statement = `DELETE FROM  graduation.enterprise WHERE (id = '${query.id}');`;
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      let data: object = {
+        code: -1,
+        message: "修改失败",
+        data: [],
+      };
+      console.log("POST /api/equipment/DeleteCompanySearch---失败");
+      response.send(data);
+    } else {
+      let data: object = {
+        code: 200,
+        message: "删除成功",
+        data: [],
+      };
+      console.log("POST /api/equipment/DeleteCompanySearch---成功");
+      response.send(data);
+    }
+  });
+});
+
+// TODO 添加指定内容
+Router.post("/CompanyAddItem", (request: any, response: any, next: any) => {
+  let data: any = request.body;
+  let startkey = "";
+  let startvalue = "";
+
+  for (let i in request.body) {
+    startkey += i + ",";
+    startvalue += `'${request.body[i]}',`;
+  }
+  startkey = startkey.slice(0, startkey.lastIndexOf(","));
+  startvalue = startvalue.slice(0, startvalue.lastIndexOf(","));
+
+  let statement = `INSERT INTO graduation.enterprise ( ${startkey}) VALUES (${startvalue});`;
+  MySQL.query(statement, (Error: any, result: any) => {
+    if (Error) {
+      const data = {
+        code: -1,
+        message: "失败",
+        data: Error,
+      };
+      response.send(data);
+      console.log("POST /api/equipment/CompanyAddItem---错误");
+    } else {
+      const data = {
+        code: 200,
+        message: "添加数据成功",
+        data: { msg: "添加数据成功" },
+      };
+      response.send(data);
+      console.log("POST /api/equipment/CompanyAddItem---成功");
+    }
+  });
+});
+
+//-------------------------------------------工厂----------------------------------------------------
 
 // TODO 插入工厂 随机 添加数据
 Router.post("/factory", (request: any, response: any) => {
@@ -794,8 +905,11 @@ Router.post("/factory", (request: any, response: any) => {
 // TODO 获取工厂数据
 Router.get("/factory", (request: any, response: any) => {
   let query: any = request.query;
+  let statement1 = `SELECT * FROM graduation.factory g  join (select count(*) as countNum from graduation.factory) f limit ${query.index},${query.pageSize};`;
+  if (query.index === "1" || query.index === 1) {
+    statement1 = `SELECT * FROM graduation.factory g  join (select count(*) as countNum from graduation.factory) f limit ${query.index - 1},${query.pageSize};`;
+  }
 
-  let statement1 = `SELECT * FROM graduation.factory f join (SELECT CompanyName,Corp,Codeempty as CodeNum FROM graduation.enterprise ) e on e.CodeNum=f.Codeempty join (SELECT count(*) as countNum from graduation.factory) c limit ${query.index},${query.pageSize};`;
   let statement2 = `select * from graduation.factory `;
   if (query.index) {
     MySQL.query(statement1, (error: any, result: any) => {
@@ -840,6 +954,111 @@ Router.get("/factory", (request: any, response: any) => {
     });
   }
 });
+
+// TODO 搜索  --- 工厂名
+Router.post("/factorySearch", (request: any, response: any, next: any) => {
+  let data = request.body;
+  // 设置请求头
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  // 分页
+  let statement1 = `select * from graduation.factory where factoryName like '%${data.keyword}%' limit ${data.index},${data.pageSize};`;
+  if (data.index === "1" || data.index === 1) {
+    statement1 = `select * from graduation.factory where factoryName like '%${data.keyword}%' limit ${data.index - 1},${data.pageSize};`;
+  }
+  // 多少条
+  let statement2 = `select count(*) as CountNum from graduation.factory where factoryName like'%${data.keyword}%';`;
+
+  MySQL.query(statement1, (error1: any, result: any) => {
+    MySQL.query(statement2, (error2: any, CountNum: any) => {
+      if (error1 || error2) {
+        console.log("POST /api/equipment/factorySearch---错误");
+        response.send(error1, error2);
+      } else {
+        if (result[0]) {
+          let data = {
+            code: 200,
+            message: "请求数据成功",
+            data: result,
+            countPage: CountNum[0].CountNum,
+          };
+          response.send(data);
+          console.log("POST /api/equipment/factorySearch---成功");
+        } else {
+          let data = {
+            code: 200,
+            message: "请求数据成功",
+            data: result,
+            countPage: 0,
+          };
+          response.send(data);
+          console.log("POST /api/equipment/factorySearch---成功");
+        }
+      }
+    });
+  });
+});
+
+// TODO 删除
+Router.post("/Deletefactory", (request: any, response: any) => {
+  let query = request.body;
+  let statement = `DELETE FROM  graduation.factory WHERE (id = '${query.id}');`;
+  MySQL.query(statement, (error: any, result: any) => {
+    if (error) {
+      let data: object = {
+        code: -1,
+        message: "修改失败",
+        data: [],
+      };
+      console.log("POST /api/equipment/DeletefactorySearch---失败");
+      response.send(data);
+    } else {
+      let data: object = {
+        code: 200,
+        message: "删除成功",
+        data: [],
+      };
+      console.log("POST /api/equipment/DeletefactorySearch---成功");
+      response.send(data);
+    }
+  });
+});
+
+// TODO 添加指定内容
+Router.post("/factoryAddItem", (request: any, response: any, next: any) => {
+  let data: any = request.body;
+  let startkey = "";
+  let startvalue = "";
+
+  for (let i in request.body) {
+    startkey += i + ",";
+    startvalue += `'${request.body[i]}',`;
+  }
+  startkey = startkey.slice(0, startkey.lastIndexOf(","));
+  startvalue = startvalue.slice(0, startvalue.lastIndexOf(","));
+
+  let statement = `INSERT INTO graduation.factory ( ${startkey}) VALUES (${startvalue});`;
+  MySQL.query(statement, (Error: any, result: any) => {
+    if (Error) {
+      const data = {
+        code: -1,
+        message: "失败",
+        data: Error,
+      };
+      response.send(data);
+      console.log("POST /api/equipment/factoryAddItem---错误");
+    } else {
+      const data = {
+        code: 200,
+        message: "添加数据成功",
+        data: { msg: "添加数据成功" },
+      };
+      response.send(data);
+      console.log("POST /api/equipment/factoryAddItem---成功");
+    }
+  });
+});
+
+//-------------------------------------------/////----------------------------------------------------
 
 // TODO 插入工厂 随机 添加数据
 Router.post("/Workshop", (request: any, response: any) => {
@@ -1248,6 +1467,10 @@ Router.get("/Workshop", (request: any, response: any) => {
 
   let statement1 = `SELECT * FROM graduation.staff s join (SELECT factoryName,factoryAdress,factoryPhone,PostalCode,Codeempty as CodeFind FROM graduation.factory) f on f.CodeFind=s.Codeempty limit ${query.index},${query.pageSize};`;
   let statement2 = `SELECT * FROM graduation.staff s join (SELECT factoryName,factoryAdress,factoryPhone,PostalCode,Codeempty as CodeFind FROM graduation.factory) f on f.CodeFind=s.Codeempty ;`;
+  if (query.index === "1" || query.index === 1) {
+    statement1 = `SELECT * FROM graduation.staff s join (SELECT factoryName,factoryAdress,factoryPhone,PostalCode,Codeempty as CodeFind FROM graduation.factory) f on f.CodeFind=s.Codeempty limit ${query.index - 1},${query.pageSize};`;
+  }
+
   let countNum = `SELECT count(*) as countNum FROM graduation.staff s join (SELECT factoryName,factoryAdress,factoryPhone,PostalCode,Codeempty as CodeFind FROM graduation.factory) f on f.CodeFind=s.Codeempty;`;
   if (query.index) {
     MySQL.query(statement1, (error1: any, result: any) => {
@@ -1303,6 +1526,10 @@ Router.get("/staff", (request: any, response: any) => {
   let query: any = request.query;
 
   let statement1 = `SELECT *,c.CountNum FROM graduation.staff join (SELECT count(*) as CountNum FROM graduation.staff) c limit ${query.index},${query.pageSize};`;
+  if (query.index === "1" || query.index === 1) {
+    statement1 = `SELECT *,c.CountNum FROM graduation.staff join (SELECT count(*) as CountNum FROM graduation.staff) c limit ${query.index - 1},${query.pageSize};`;
+  }
+
   let statement2 = `SELECT *,c.CountNum FROM graduation.staff join (SELECT count(*) as CountNum FROM graduation.staff) c;`;
   if (query.index) {
     MySQL.query(statement1, (error1: any, result: any) => {
