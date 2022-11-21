@@ -1,0 +1,6 @@
+启动：systemctl start nginx
+重启：systemctl restart nginx
+关闭：systemctl stop nginx
+查看状态：systemctl status nginx
+开启开机自动启动：systemctl enable nginx
+关闭开机自动启动：systemctl disable nginx
