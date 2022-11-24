@@ -1,0 +1,20 @@
+{
+  "slide": [
+    {
+      "id": 1,
+      "imgUrl": "https://www.kelicloud.cn/skin/images/ibanner1.jpg"
+    },
+    {
+      "id": 2,
+      "imgUrl": "https://www.kelicloud.cn/skin/images/ibanner2.jpg"
+    },
+    {
+      "id": 3,
+      "imgUrl": "https://www.kelicloud.cn/skin/images/ibanner3.jpg"
+    },
+    {
+      "id": 4,
+      "imgUrl": "https://www.kelicloud.cn/skin/images/bannerwap.jpg"
+    }
+  ]
+}

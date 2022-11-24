@@ -1,4 +1,4 @@
-import { reqtodolistAddItem, reqtodolistAll, reqtodolistSearch, reqtodolistUpdatecomplet, reqtodolistUpdateDelete } from "@/api/Search_DeleteAPI.js";
+import { reqChangeTodolistCountent, reqtodolistAddItem, reqtodolistAll, reqtodolistSearch, reqtodolistUpdatecomplet, reqtodolistUpdateDelete } from "@/api/Search_DeleteAPI.js";
 
 const TodolistAll = {
   state: {
@@ -49,9 +49,17 @@ const TodolistAll = {
       }
     },
     //  修改完成状态
-    // 添加
     async todolistUpdatecomplet({ commit }: any, query: any) {
       const result = await reqtodolistUpdatecomplet(query);
+      if (result.code == 200) {
+        return "修改成功";
+      } else {
+        return Promise.reject(new Error("修改失败"));
+      }
+    },
+    //  修改内容
+    async ChangeTodolistCountent({ commit }: any, query: any) {
+      const result = await reqChangeTodolistCountent(query);
       if (result.code == 200) {
         return "修改成功";
       } else {

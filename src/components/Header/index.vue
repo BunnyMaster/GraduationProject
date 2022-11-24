@@ -28,20 +28,20 @@
           <li>
             <div class="box">
               <div class="font">
-                <router-link to="/home">首页</router-link>
+                <router-link to="/Mainpage">主页</router-link>
               </div>
               <div class="bottom">
-                <router-link to="/home">去首页</router-link>
+                <router-link to="/Mainpage">去主页</router-link>
               </div>
             </div>
           </li>
           <li>
             <div class="box">
               <div class="font">
-                <router-link to="/login">登录注册</router-link>
+                <router-link to="/home">系统首页</router-link>
               </div>
               <div class="bottom">
-                <router-link to="/login">去注册</router-link>
+                <router-link to="/home">去系统首页</router-link>
               </div>
             </div>
           </li>
@@ -61,8 +61,8 @@
         </div>
         <!-- 登录和退出登录 -->
         <div class="Login-Loginout">
-          <a href="JavaScript:;" @click="HeaderFun.LoginOut()">重新注册</a>
-          <router-link to="/login">修改信息</router-link>
+          <a href="JavaScript:;" @click="HeaderFun.LoginOut()">退出登录</a>
+          <router-link to="/home/main/ChangeUserInfo">修改信息</router-link>
         </div>
       </div>
       <el-tooltip class="box-item" effect="dark" :content="HeaderData.FullScreenFlag ? '全屏显示' : '退出全屏'" placement="bottom">

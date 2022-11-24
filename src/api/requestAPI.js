@@ -27,6 +27,18 @@ export const reqLogin = data => {
   return Request({ url: `/equipment/Login?UserName=${data.UserName}&UserPwd=${data.UserPwd}`, method: "POST" });
 };
 
+// TODO 修改用户信息
+export const reqChangeUserInfo = data => {
+  return Request({
+    url: `/equipment/ChangeUserInfo`,
+    data: qs.stringify(data),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  });
+};
+
 // TODO 注册信息 /equipment/register  UserName=12345&as=12
 export const reqRegister = data => {
   return Request({ url: `/equipment/register?UserName=${data.UserName}&UserPwd1=${data.UserPwd1}`, method: "POST" });
@@ -79,44 +91,26 @@ export const reqInfraredCounterGun = query => {
 // TODO 获取企业列表 GET /equipment/Company?index=0&pageSize=10
 export const reqCompany = query => {
   return Request({ url: `/equipment/Company?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
-  // return Request({ url: `/equipment/Company`, method: "GET" });
 };
 
 // TODO 获取工厂列表 GET /equipment/Company?index=0&pageSize=10
 export const reqfactory = query => {
   return Request({ url: `/equipment/factory?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
-  // return Request({ url: `/equipment/factory`, method: "GET" });
 };
 
 // TODO 获取工厂信息 Workshop
 export const reqWorkshop = query => {
   return Request({ url: `/equipment/Workshop?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
-  // return Request({ url: `/equipment/factory`, method: "GET" });
 };
 
 // TODO 获取员工信息 staff
 export const reqstaff = query => {
   return Request({ url: `/equipment/staff?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
-  // return Request({ url: `/equipment/factory`, method: "GET" });
 };
-
-/*// TODO 随机添加---红外对射枪  /api/equipment/InfraredCounterGun
-export const reqtest = data => {
-  return Request({
-    url: "/equipment/test",
-    data: qs.stringify(data),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "text/json",
-    },
-    method: "POST",
-  });
-};*/
 
 // TODO 获取全部维修工单信息  /api/equipment/RepairReacrd
 export const reqRepairReacrd = () => {
   return Request({ url: `/equipment/RepairReacrd`, method: "GET" });
-  // return Request({ url: `/equipment/factory`, method: "GET" });
 };
 
 // TODO 随机添加---红外对射枪  /api/equipment/InfraredCounterGun
@@ -191,3 +185,22 @@ export const reqGETPerformanceConfig = query => {
 export const reqGETPerformance = query => {
   return Request({ url: `/equipment/Performance?index=${query.index}&pageSize=${query.pageSize}`, method: "GET" });
 };
+
+// TODO 获取总表 FindDate
+export const reqFindDate = data => {
+  return Request({
+    // url: `/equipment/FindDate?data=${data}`,
+    url: `/equipment/FindDate`,
+    data: qs.stringify(data),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "text/json",
+    },
+    method: "POST",
+  });
+};
+
+// 请求页面导航
+export const reqHomeMainPage = () => MockRequest({ url: "/HomeMainPage", method: "GET" });
+// 轮播图图片
+export const reqSlideShow = () => MockRequest({ url: "/slide", method: "GET" });

@@ -45,11 +45,13 @@ declare module '@vue/runtime-core' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     Header: typeof import('./src/components/Header/index.vue')['default']
     HomeHeader: typeof import('./src/components/HomeHeader.vue')['default']
     HomeTableCommon: typeof import('./src/components/HomeTableCommon.vue')['default']
     JsBarcode: typeof import('./src/components/JsBarcode.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UploadHeaderImages: typeof import('./src/components/upload/UploadHeaderImages.vue')['default']
   }
 }

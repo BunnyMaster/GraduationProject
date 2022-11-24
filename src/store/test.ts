@@ -1,8 +1,8 @@
-const TodolistAll = {
+const HomeMainPage = {
   state: {},
   getters: {},
   mutations: {},
   actions: {},
   modules: {},
 };
-export default TodolistAll;
+export default HomeMainPage;

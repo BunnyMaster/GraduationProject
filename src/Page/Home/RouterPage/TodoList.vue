@@ -11,7 +11,7 @@
         <template #empty>
           <el-empty>
             <template #description> 暂无数据 </template>
-            <el-button type="primary">刷新</el-button>
+            <el-button type="primary" @click="Fun.GETtodolistAll">刷新</el-button>
           </el-empty>
         </template>
         <!--   TODO --- 序号  -->
@@ -68,8 +68,28 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column
+          align="center"
+          prop="Sate"
+          label="分类"
+          width="auto"
+          :filters="[
+            { text: '数学', value: '数学' },
+            { text: '计算机', value: '计算机' },
+            { text: '英语', value: '英语' },
+            { text: '其他', value: '其他' },
+          ]"
+          :filter-method="Fun.filterDepartmentClassType"
+          filter-placement="bottom-end"
+        >
+          <template #default="scope">
+            <el-tag :type="Fun.filterTagClassType(scope.row.ClassType)" disable-transitions>
+              {{ scope.row.ClassType }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <!--  TODO --- 操作   -->
-        <el-table-column align="center" label="操作" :fixed="'right'" width="236">
+        <el-table-column align="center" label="操作" :fixed="'right'" width="336">
           <template #default="scope">
             <el-popconfirm
               title="确定要删除吗？"
@@ -84,6 +104,7 @@
                 <el-button size="default" type="danger" plain :icon="Delete"> 删除 </el-button>
               </template>
             </el-popconfirm>
+            <el-button size="default" type="success" plain :icon="EditPen" @click="Fun.ChangeTodolistCountent(scope.$index, scope.row)"> 修改 </el-button>
             <el-dropdown>
               <el-button :type="Fun.filterTagSate(scope.row.Sate)" style="height: 35px; margin-left: 15px">
                 完成情况
@@ -91,9 +112,15 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="Fun.ChangeState(scope.$index, scope.row, '完成')" :disabled="scope.row.Sate === '完成'">完成</el-dropdown-item>
-                  <el-dropdown-item @click="Fun.ChangeState(scope.$index, scope.row, '未完成')" :disabled="scope.row.Sate === '未完成'">未完成</el-dropdown-item>
-                  <el-dropdown-item @click="Fun.ChangeState(scope.$index, scope.row, '执行中')" :disabled="scope.row.Sate === '执行中'">执行中</el-dropdown-item>
+                  <el-dropdown-item @click="scope.row.Sate === '完成' ? '' : Fun.ChangeState(scope.$index, scope.row, '完成')" :disabled="scope.row.Sate === '完成'">
+                    完成
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="scope.row.Sate === '未完成' ? '' : Fun.ChangeState(scope.$index, scope.row, '未完成')" :disabled="scope.row.Sate === '未完成'">
+                    未完成
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="scope.row.Sate === '执行中' ? '' : Fun.ChangeState(scope.$index, scope.row, '执行中')" :disabled="scope.row.Sate === '执行中'">
+                    执行中
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -141,12 +168,18 @@
           <el-option label="完成" value="完成" /> <el-option label="未完成" value="未完成" /> <el-option label="执行中" value="执行中" />
         </el-select>
       </el-form-item>
+      <!-- TODO 流程版本-->
+      <el-form-item label="当前分类" :label-width="form.formLabelWidth">
+        <el-select v-model="form.name.ClassType" class="m-2" placeholder="请选择当前分类">
+          <el-option label="数学" value="数学" /> <el-option label="计算机" value="计算机" /> <el-option label="英语" value="英语" /><el-option label="其他" value="其他" />
+        </el-select>
+      </el-form-item>
     </el-form>
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">返回</el-button>
-        <el-button type="primary" @click="Fun.SubmitName()">确认</el-button>
+        <el-button @click="(dialogFormVisible = false), Fun.GETtodolistAll">返回</el-button>
+        <el-button type="primary" @click="Data.isChangeTodolist ? Fun.SubmitName() : Fun.SubmitChange()">确认</el-button>
       </span>
     </template>
   </el-dialog>
@@ -154,16 +187,17 @@
 <script setup lang="ts">
 import HomeTableCommon from "@/components/HomeTableCommon.vue";
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { Timer, Plus, Search, Delete, ArrowDown, Discount, UserFilled } from "@element-plus/icons-vue";
+import { Timer, Plus, Search, Delete, ArrowDown, Discount, UserFilled, EditPen } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 import { ElMessage, ElNotification } from "element-plus";
 import dayjs from "dayjs";
-import { now } from "lodash";
 interface User {
   date: string;
   name: string;
   address: string;
   tag: string;
+  Sate: string;
+  ClassType: string;
 }
 const store = useStore();
 const tableList = ["设备条码", "设备类型", "设备规格", "所属工站", "所属工位", "感应距离", "感应方式", "采购时间", "出厂编号", "用途", "所有权部门", "资产负责人"];
@@ -173,11 +207,16 @@ const Data = reactive({
   pageSize: 10, // 每页显示多少跳
   AllPageSize: computed(() => store.state.TodolistAll.TodolistPageSize),
   isShow: 1,
+  isChangeTodolist: true,
 });
 const Fun = reactive({
   // TODO 过滤列表
   filterDepartmentOfOwnership(value: string, row: User) {
     return row.Sate === value;
+  },
+  // TODO 过滤列表
+  filterDepartmentClassType(value: string, row: User) {
+    return row.ClassType === value;
   },
   //  TODO 过滤标签
   filterTagDepartmentOfOwnership(Stata: string) {
@@ -190,6 +229,25 @@ const Fun = reactive({
         flag = "warning";
         break;
       case "执行中":
+        flag = "";
+        break;
+    }
+    return flag;
+  },
+  //  TODO 过滤标签
+  filterTagClassType(Stata: string) {
+    let flag = "";
+    switch (Stata) {
+      case "数学":
+        flag = "success";
+        break;
+      case "计算机":
+        flag = "warning";
+        break;
+      case "英语":
+        flag = "danger";
+        break;
+      case "其他":
         flag = "";
         break;
     }
@@ -292,33 +350,78 @@ const Fun = reactive({
     let data: any = form.name;
     data.AddTime = dayjs(data.AddTime).format("YYYY年MM月DD号 HH:mm:ss");
     data.EndTime = dayjs(data.EndTime).format("YYYY年MM月DD号 HH:mm:ss");
-    try {
-      await store.dispatch("todolistAddItem", data);
-      Fun.GETtodolistAll();
-      ElMessage({
-        showClose: true,
-        message: `添加成功`,
-        type: "success",
-        center: true,
-      });
-      dialogFormVisible.value = false;
-    } catch (e) {
-      ElMessage({
-        showClose: true,
-        message: `错误${e.message}`,
-        type: "error",
-        center: true,
-      });
+    const { AddTime, AddPerson, TodoDetail, EndTime, Sate, ClassType } = form.name;
+    if (AddTime && AddPerson && TodoDetail && EndTime && Sate && ClassType) {
+      try {
+        await store.dispatch("todolistAddItem", data);
+        Fun.GETtodolistAll();
+        ElMessage({
+          showClose: true,
+          message: `添加成功`,
+          type: "success",
+          center: true,
+        });
+        dialogFormVisible.value = false;
+      } catch (e) {
+        ElMessage({
+          showClose: true,
+          message: `错误${e.message}`,
+          type: "error",
+          center: true,
+        });
+      }
     }
   },
   //  修改完成状态
   async ChangeState(index: number, scop: any, val: string) {
-    // console.log(scop.uuid,val);
     try {
       await store.dispatch("todolistUpdatecomplet", {
         uuid: scop.uuid,
         Sate: val,
       });
+      Fun.GETtodolistAll();
+      ElMessage({
+        showClose: true,
+        message: "修改成功",
+        type: "success",
+        center: true,
+      });
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: `${e.message}`,
+        type: "success",
+        center: true,
+      });
+    }
+  },
+  //  TODO 修改ChangeTodolistCountent
+  async ChangeTodolistCountent(index: number, row: any) {
+    try {
+      Data.isChangeTodolist = false;
+      let data = row;
+      data.AddTime = dayjs(data.AddTime.replace("年", "-").replace("月", "-").replace("号", "")).format();
+      data.EndTime = dayjs(data.EndTime.replace("年", "-").replace("月", "-").replace("号", "")).format();
+      form.name = data;
+      dialogFormVisible.value = true;
+    } catch (e) {
+      ElMessage({
+        showClose: true,
+        message: `${e.message}`,
+        type: "error",
+        center: true,
+      });
+    }
+  },
+  //  TODO 提交修改选项
+  async SubmitChange() {
+    try {
+      let data: any = form.name;
+      data.AddTime = dayjs(form.name.AddTime).format("YYYY年MM月DD号 HH:mm:ss");
+      data.EndTime = dayjs(form.name.EndTime).format("YYYY年MM月DD号 HH:mm:ss");
+      await store.dispatch("ChangeTodolistCountent", data);
+      dialogFormVisible.value = false;
+      Data.isChangeTodolist = false;
       Fun.GETtodolistAll();
       ElMessage({
         showClose: true,
@@ -345,6 +448,7 @@ const form = reactive({
     TodoDetail: "",
     EndTime: "",
     Sate: "",
+    ClassType: "",
   },
   delivery: false,
   formLabelWidth: "140px",
@@ -366,6 +470,7 @@ const Search_Add = reactive({
   //  TODO 添加数据
   AddItem(flag: boolean) {
     dialogFormVisible.value = flag;
+    Data.isChangeTodolist = true;
     if (dialogFormVisible.value) {
       ElMessage.closeAll();
       ElNotification.closeAll();

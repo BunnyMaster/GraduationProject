@@ -4,6 +4,11 @@ import homeChildren from "./Home/HomeChildren";
 const routes: Array<RouteRecordRaw> = [
   { path: "/", redirect: "/home" },
   {
+    path: "/Mainpage",
+    name: "Mainpage",
+    component: () => import("@/Page/MainPage/index.vue"),
+  },
+  {
     path: "/home",
     name: "home",
     redirect: "/home/main",

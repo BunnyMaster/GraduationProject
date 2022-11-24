@@ -16,8 +16,13 @@ const homeChildren = [
     component: () => import("@/Page/Home/RouterPage/calendar.vue"),
     meta: { title: "日历" },
   },
-
-  //日历
+  //修改用户信息
+  {
+    path: "/home/main/ChangeUserInfo",
+    component: () => import("@/Page/Home/ChangeUserInfo.vue"),
+    meta: { title: "修改用户信息" },
+  },
+  //计划表
   {
     path: "/home/main/todolist",
     component: () => import("@/Page/Home/RouterPage/TodoList.vue"),

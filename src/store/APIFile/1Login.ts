@@ -1,4 +1,4 @@
-import { reqLogin, reqLoginHome, reqRegister, reqReoairList } from "@/api/requestApi.js";
+import { reqChangeUserInfo, reqLogin, reqLoginHome, reqRegister, reqReoairList } from "@/api/requestApi.js";
 
 const Login = {
   state: {
@@ -67,6 +67,16 @@ const Login = {
         commit("PSOTLOGIN", result);
       } else {
         return Promise.reject(new Error("登录失败"));
+      }
+      return result;
+    },
+    //   TODO 修改用户信息
+    async ChangeUserInfo({ commit }: any, data: any) {
+      const result = await reqChangeUserInfo(data);
+      if (result.code === 200) {
+        return "修改成功";
+      } else {
+        return Promise.reject(new Error("修改失败"));
       }
       return result;
     },

@@ -6,7 +6,7 @@ const WebpackBar = require("webpackbar");
 module.exports = defineConfig({
   transpileDependencies: true,
   // TODO 打包时使用
-  /*  publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
+  /* publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
   outputDir: "dist",
   indexPath: "index.html",*/
   lintOnSave: false,

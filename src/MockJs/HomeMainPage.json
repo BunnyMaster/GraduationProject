@@ -1,0 +1,259 @@
+{
+  "homeNav": [
+    "首页",
+    "产品中心",
+    "行业方案",
+    "客户案例",
+    "服务",
+    "数字学院",
+    "关于柯力云鲸",
+    "获取资料"
+  ],
+  "qwrzCount": [
+    {
+      "imgUrl": "https://www.kelicloud.cn/skin/images/iconhomerenzheng01.png ",
+      "content": "CMMI3认证是被IT服务管理领域广泛接受的标准"
+    },
+    {
+      "imgUrl": "https://www.kelicloud.cn/skin/images/iconhomerenzheng02.png ",
+      "content": "ISO 9001认证"
+    },
+    {
+      "imgUrl": "https://www.kelicloud.cn/skin/images/iconhomerenzheng03.png ",
+      "content": "ISO 20000认证"
+    },
+    {
+      "imgUrl": " https://www.kelicloud.cn/skin/images/iconhomerenzheng04.png",
+      "content": "ISO 20001认证"
+    },
+    {
+      "imgUrl": " https://www.kelicloud.cn/skin/images/iconhomerenzheng05.png",
+      "content": "高薪科技企业"
+    },
+    {
+      "imgUrl": "https://www.kelicloud.cn/skin/images/iconhomerenzheng06.png ",
+      "content": "软件企业"
+    }
+  ],
+  "hyal": [
+    {
+      "title": "新能源装备",
+      "detail": "新能源装备行业背景新能源产业是一个新兴产业，目前正处于高速发展阶段。数据显示，2018年我国新能源市场规模达8822.54亿元，同比增长18.5%。预计2021年我国新能源市场规模将达10399亿元。行业介绍新能源产业主要是源于新能源的发现和应用。新能源指刚开始开发利用或正在积极研究、有待推广的能源，如太阳能、地热能、风能、海洋...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220122/1-22012201133X93.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/151.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/151.html"
+    },
+    {
+      "title": "食品行业",
+      "detail": "食品行业行业背景食品产业关系民生国计，虽然增长相对慢，但十分稳定。在国际疫情不断蔓延发展、中美局势进一步紧张的大环境下，食品产业逐渐显现出其优势，受到越来越多投资者关注。行业介绍食品行业是对农、林、牧、副、渔等部门生产的产品进行加工制造以取得食品的生产部门，与人们生活紧密相关。它包括门类专门广泛，通常大致分为十类，即制糖工业、...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220122/1-220122005J2248.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/150.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/150.html"
+    },
+    {
+      "title": "电子行业",
+      "detail": "电子行业行业背景消费电子沿着智能性和便携性两个维度发展。在过去几年，市场关注的焦点在于智能性维度，即设备从功能型向智能型的演变;直至最近,谷歌眼镜才引发了市场对便携性维度的关注。在便携性的维度，我们把电子产品分为四种类型:固定型、可携带型、可穿戴型和嵌入人体型。我们认为，消费电子产品从可携带型向可穿戴型的演变刚刚开始，未来甚至...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220121/1-220121033121215.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/149.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/149.html"
+    },
+    {
+      "title": "纺织业",
+      "detail": "纺织业行业背景纺织业是传统的劳动密集型产业，现阶段中国劳动力成本逐年上升，已经高于东南亚和非洲等国。纺织行业长期存在用工困难的问题，对纺织制造智能化提出了迫切的需求。而在智能工业时代，智能化的机器正在替代工人是趋势所向。行业介绍纺织业在我国是一个劳动密集程度高和对外依存度较大的产业。我国是世界上最大的纺织品服装生产和出口国，...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220121/1-220121020J04G.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/148.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/148.html"
+    },
+    {
+      "title": "仪器仪表",
+      "detail": "仪器仪表行业背景随着仪表行业竞争的加剧，市场日趋饱和，粗放式管理的缺陷日益暴露，导致仪表行业企业利润不同程度的下滑，要想满足仪表行业客户个性化的需求，适应未来的发展，亟需一整套仪表行业行业信息化解决方案！行业介绍智能仪表作为智能仪器之一，目前已不再是简单的硬件实体，而是硬件、软件相结合的产物。近年来，智能仪表已开始从较为成熟的...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220121/1-220121024QUa.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/147.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/147.html"
+    },
+    {
+      "title": "农林牧渔",
+      "detail": "农林牧渔行业背景农林牧渔信息化的建设是国家农林牧渔业智慧转型升级的迫切要求。近年来,我国农林牧渔持续较快发展,农林牧渔供给总量充足,但发展不平衡、不协调、不可持续的问题也十分突出，传统管理手段、生产技术已无法满足现代渔业发展需要，迫切要求创新工作理念、工作方式和工作手段。以农林牧渔信息化为引领和支撑，运用信息化的思维理念和技术...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220120/1-220120023020U0.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/146.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/146.html"
+    },
+    {
+      "title": "能源装备",
+      "detail": "能源装备行业背景我国新能源技术装备业发展较快，新能源技术装备业各个指标绝大多数总体走势呈上升状态，只有指标的增长率呈现上升、下降相互交替的周期波动形态，并且行业很多技术尚不成熟，能够转化城产品的技术项目较少，前期的技术投入仍旧会占据较大的成本。因此，我国的新能源技术装备周期还处于成长型初期！行业介绍能源装备是国家战略性新兴专业...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220120/1-220120020Q4217.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/145.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/145.html"
+    },
+    {
+      "title": "汽车汽配",
+      "detail": "汽车汽配行业背景汽车零配件作为汽车的重要组成部分，是汽车产业发展的基础。在经济全球化的背景下，伴随着汽车产业新的变化，世界汽车零配件产业也呈现出新的发展态势。中国汽车零配件行业在国民经济中占有很重要的地位，和汽车整车行业组成的汽车行业是机械行业中第一大产业。因此，对于我国汽车零配件行业进行分析研究是十分必要的。行业介绍汽车行业...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220120/1-220120012115452.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/144.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/144.html"
+    },
+    {
+      "title": "港口行业",
+      "detail": "港口行业行业背景港口行业竞争激烈，粗放型增长时代已经过去，港口设备管理现状不容乐观，设备的资产管控能力较低、运行效率较低、维护成本较高等现状突出，实施设备智能化管理迫在眉睫。工业互联网港口行业解决方案面向港口企业，提供设备监控、工作考核服务，并通过数据统计分析报表，为企业提供科学的管理决策依据。行业介绍港口是重要的交通基础设施...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220120/1-220120005U4a6.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/143.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/143.html"
+    },
+    {
+      "title": "物流运输",
+      "detail": "物流运输行业背景随着我国物流行业的快速发展，物流公司已经不仅仅是提供单一的快递运输业务而转型为“综合物流服务商”。基于物联网大数据的智慧物流将是现代物流的发展方向，实现物流信息化、智能化，对传统物流行业转型具有重要意义。行业介绍物流运输技术主要包括运输设施和运输作业两大类，前者属于运输硬技术，后者属于运输软技术。运输硬技术主要...",
+      "imgUrl": "https://www.kelicloud.cn/uploads/allimg/20220119/1-22011Z30306158.jpg",
+      "Nowsolution": "https://www.kelicloud.cn/solution/142.html",
+      "Learnsolution":"https://www.kelicloud.cn/solution/142.html"
+    }
+  ],
+  "wtb": {
+    "cpal":{
+      "title": "产品服务",
+      "countent": [
+        {
+          "text": "IBMS智能集成管控套件",
+          "url":"https://www.kelicloud.cn/product/pr4/692.html"
+        },{
+          "text": "能源监控监测套件",
+          "url":   "https://www.kelicloud.cn/product/pr4/691.html"
+        },{
+          "text": "WMS智能仓储套件",
+          "url":  "https://www.kelicloud.cn/product/pr4/690.html"
+        },{
+          "text": "SRM供货条码管理套件",
+          "url":  "https://www.kelicloud.cn/product/pr4/689.html"
+        },{
+          "text": "TMS车辆实时跟踪套件",
+          "url":  "https://www.kelicloud.cn/product/pr4/688.html"
+        },{
+          "text": "车间异常快速反应套件",
+          "url":   "https://www.kelicloud.cn/product/pr3/687.html"
+        },{
+          "text": "电子SOP套件",
+          "url": "https://www.kelicloud.cn/product/pr3/686.html"
+        },{
+          "text": "小工单套件",
+          "url": "https://www.kelicloud.cn/product/pr3/685.html"
+        },{
+          "text": "设备监控套件",
+          "url":"https://www.kelicloud.cn/product/pro2/684.html"
+        },{
+          "text": "EAM设备资产管理套件",
+          "url":  "https://www.kelicloud.cn/product/pro2/683.html"
+        },{
+          "text": "智慧园区集成管控平台",
+          "url":  "https://www.kelicloud.cn/product/pr3/552.html"
+        },{
+          "text": "数字化加工中心管理系统",
+          "url":  "https://www.kelicloud.cn/product/pr3/551.html"
+        }
+      ]
+    },
+    "hyal": {
+      "title": "行业方案",
+      "countent": [
+        {
+          "text": "新能源装备",
+         "url":"https://www.kelicloud.cn/solution/151.html"
+        },  {
+          "text": "食品行业",
+        "url":   "https://www.kelicloud.cn/solution/150.html"
+        },  {
+          "text": "电子行业",
+   "url": "https://www.kelicloud.cn/solution/149.html"
+        },  {
+          "text": "纺织业",
+          "url":    "https://www.kelicloud.cn/solution/148.html"
+        },  {
+          "text": "仪器仪表",
+     "url":      "https://www.kelicloud.cn/solution/147.html"
+        },  {
+          "text": "农林牧渔",
+        "url":      "https://www.kelicloud.cn/solution/146.html"
+        },  {
+          "text": "能源装备",
+    "url":        "https://www.kelicloud.cn/solution/145.html"
+        },  {
+          "text": "汽车汽配",
+        "url":      "https://www.kelicloud.cn/solution/144.html"
+        },  {
+          "text": "港口行业",
+     "url":  "https://www.kelicloud.cn/solution/143.html"
+        },  {
+          "text": "物流运输",
+         "url":   "https://www.kelicloud.cn/solution/142.html"
+        },  {
+          "text": "环保设备",
+       "url":   "https://www.kelicloud.cn/solution/141.html"
+        },  {
+          "text": "注塑行业",
+         "url":      "https://www.kelicloud.cn/solution/140.html"
+        }
+      ]
+    },
+    "szxy": {
+      "title": "数字化学院",
+      "countent": [
+        {
+          "text": "政策导向",
+          "url":         "https://www.kelicloud.cn/edu/zhengcedaoxiang/"
+        },    {
+          "text": "智能制造",
+          "url":  "https://www.kelicloud.cn/edu/zhinenzhizao/"
+        },    {
+          "text": "工业APP",
+          "url":         "https://www.kelicloud.cn/edu/gongyeapp/"
+        },    {
+          "text": "产业互联网",
+          "url":  "https://www.kelicloud.cn/edu/chanyehulianwang/"
+        },    {
+          "text": "前沿技术",
+          "url":    "https://www.kelicloud.cn/edu/qianyanjishu/"
+        },  {
+          "text": "常见问题",
+          "url":    "https://www.kelicloud.cn/edu/faq/"
+        }
+      ]
+    },
+    "company": {
+      "title": "关于柯力云鲸",
+      "countent": [
+        {
+          "text":           "公司介绍",
+          "url":    "https://www.kelicloud.cn/about/"
+        },  {
+          "text":           "客户案例",
+          "url":         "https://www.kelicloud.cn/case/"
+        },  {
+          "text":           "团队架构",
+          "url":         "https://www.kelicloud.cn/fuwu/team/"
+        },  {
+          "text":           "交付内容",
+          "url":        "https://www.kelicloud.cn/fuwu/chanpinshishi/"
+        }, {
+          "text":           "PMO项目管理",
+          "url":       "https://www.kelicloud.cn/fuwu/chanpindingzhi/"
+        }
+      ]
+    }
+  },
+  "yqlj": [
+    {
+      "text": "app开发",
+      "url": "http://www.ifenguo.com/"
+    },
+    {
+      "text": "app开发公司",
+      "url": "http://www.ewhale.cn/"
+    },
+    {
+      "text": "工业互联网",
+      "url": "https://www.kelicloud.cn/"
+    },
+    {
+      "text": "透明工厂",
+      "url":"https://www.kelicloud.cn/"
+    }
+  ]
+}

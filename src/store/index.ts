@@ -15,6 +15,9 @@ import OrderManagement from "@/store/APIFile/11 OrderManagement";
 import ProcessMaintenanceANDFlowMaintenance from "@/store/APIFile/12 ProcessMaintenanceANDFlowMaintenance;";
 import Performance from "@/store/APIFile/13 Performance";
 import TodolistAll from "@/store/APIFile/14 TodoList";
+import Upload from "./modules/Upload";
+import FindDate from "./modules/FindDate";
+import HomeMainPage from "./modules/HomeMainPage";
 export default createStore({
   state: {},
   getters: {},
@@ -37,5 +40,8 @@ export default createStore({
     ProcessMaintenanceANDFlowMaintenance,
     Performance,
     TodolistAll,
+    Upload,
+    FindDate,
+    HomeMainPage,
   },
 });

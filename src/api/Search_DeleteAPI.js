@@ -495,3 +495,16 @@ export const reqfactoryAddItem = data => {
     method: "POST",
   });
 };
+
+// TODO 修改todolist
+export const reqChangeTodolistCountent = data => {
+  return Request({
+    url: `/equipment/ChangeTodolistCountent`,
+    data: qs.stringify(data),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "text/json",
+    },
+    method: "POST",
+  });
+};
